@@ -1,0 +1,82 @@
+package com.dariusepure.autoadvisor
+
+import android.content.Intent
+import android.net.Uri
+import android.os.Bundle
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.compose.ui.Modifier
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.dariusepure.autoadvisor.ui.AppNavigation
+import com.dariusepure.autoadvisor.ui.Screen
+import com.dariusepure.autoadvisor.ui.theme.GoFindAutoTheme
+import com.dariusepure.autoadvisor.ui.theme.SettingsViewModel
+import dagger.hilt.android.AndroidEntryPoint
+
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+    @OptIn(androidx.compose.material3.windowsizeclass.ExperimentalMaterial3WindowSizeClassApi::class)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
+        super.onCreate(savedInstanceState)
+        
+        enableEdgeToEdge()
+        setContent {
+            val settingsViewModel: SettingsViewModel = hiltViewModel()
+            val isDarkMode by settingsViewModel.isDarkMode.collectAsState()
+            
+            val systemDark = isSystemInDarkTheme()
+            val useDarkTheme = isDarkMode ?: systemDark
+
+            var deepLinkRoute by remember { mutableStateOf<String?>(null) }
+
+            // Handle Password Reset Intent
+            LaunchedEffect(intent) {
+                handleIntent(intent) { oobCode ->
+                    deepLinkRoute = Screen.ResetPassword.createRoute(oobCode)
+                }
+            }
+
+            GoFindAutoTheme(darkTheme = useDarkTheme) {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    AppNavigation(
+                        startDestination = deepLinkRoute,
+                        settingsViewModel = settingsViewModel,
+                        windowSizeClass = calculateWindowSizeClass(this)
+                    )
+                }
+            }
+        }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+    }
+
+    private fun handleIntent(intent: Intent?, onReset: (String) -> Unit) {
+        val data: Uri? = intent?.data
+        if (data != null && data.toString().contains("oobCode")) {
+            val oobCode = data.getQueryParameter("oobCode")
+            if (oobCode != null) {
+                onReset(oobCode)
+            }
+        }
+    }
+}

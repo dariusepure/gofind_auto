@@ -1,0 +1,173 @@
+<resources>
+    <string name="app_name">GoFind Auto</string>
+
+    <!-- Common -->
+    <string name="common_save">Salvează</string>
+    <string name="common_date_label">Data</string>
+    <string name="common_cancel">Anulează</string>
+    <string name="common_add">Adaugă</string>
+    <string name="common_update">Actualizează</string>
+    <string name="common_delete">Șterge</string>
+    <string name="common_delete_confirmation">Confirmare ștergere</string>
+    <string name="common_delete_msg">Ești sigur că vrei să ștergi acest element?</string>
+    <string name="common_edit">Editează</string>
+    <string name="common_try_again">Încearcă din nou</string>
+    <string name="common_loading">Se încarcă</string>
+    <string name="common_error_title">Ceva nu a mers bine</string>
+    <string name="common_back">Înapoi</string>
+    <string name="common_not_applicable">N/A</string>
+    <string name="common_language">Limbă</string>
+    <string name="common_sort">Sortare</string>
+    <string name="common_settings">Setări</string>
+    <string name="common_none">Niciunul</string>
+    <string name="common_powered_by">Dezvoltat de Darius DevWorks</string>
+
+    <!-- Colors -->
+    <string name="color_white">Alb</string>
+    <string name="color_black">Negru</string>
+    <string name="color_silver">Argintiu</string>
+    <string name="color_gray">Gri</string>
+    <string name="color_blue">Albastru</string>
+    <string name="color_red">Roșu</string>
+    <string name="color_brown">Maro</string>
+    <string name="color_green">Verde</string>
+    <string name="color_yellow">Galben</string>
+    <string name="color_orange">Portocaliu</string>
+
+    <!-- Fuel Types -->
+    <string name="fuel_petrol">Benzină</string>
+    <string name="fuel_diesel">Motorină</string>
+    <string name="fuel_electric">Electric</string>
+    <string name="fuel_hybrid">Hibrid</string>
+    <string name="fuel_lpg">GPL</string>
+    <string name="fuel_cng">GNC</string>
+    <string name="fuel_hydrogen">Hidrogen</string>
+
+    <!-- Relative Time -->
+    <string name="relative_just_now">acum</string>
+    <string name="relative_minutes_ago">acum %dm</string>
+    <string name="relative_hours_ago">acum %dh</string>
+    <string name="relative_days_ago">acum %dd</string>
+
+    <!-- Auth -->
+    <string name="auth_signin_title">Autentificare</string>
+    <string name="auth_signup_title">Înregistrare</string>
+    <string name="auth_forgot_password_title">Ai uitat parola?</string>
+    <string name="auth_reset_password_title">Resetează parola</string>
+    <string name="auth_set_new_password_title">Setează parolă nouă</string>
+    <string name="auth_email_label">Email</string>
+    <string name="auth_password_label">Parolă</string>
+    <string name="auth_confirm_password_label">Confirmă parola</string>
+    <string name="auth_new_password_label">Parolă nouă</string>
+    <string name="auth_confirm_new_password_label">Confirmă parola nouă</string>
+    <string name="auth_signin_button">Autentificare</string>
+    <string name="auth_signin_subtitle">Autentifică-te pentru a continua de unde ai rămas.</string>
+    <string name="auth_signup_button">Înregistrare</string>
+    <string name="auth_signup_subtitle">Alătură-te GoFind Auto astăzi.</string>
+    <string name="auth_forgot_password_subtitle">Introdu adresa de email și îți vom trimite un link pentru resetarea parolei.</string>
+    <string name="auth_reset_password_subtitle">Te rugăm să introduci și să confirmi noua parolă mai jos.</string>
+    <string name="auth_reset_password_success">Parola a fost schimbată cu succes!</string>
+    <string name="auth_reset_password_instruction">Securizează-ți contul</string>
+    <string name="auth_reset_link_sent">Link-ul de resetare a fost trimis! Te rugăm să verifici adresa de email pentru a continua.</string>
+    <string name="auth_hide_password">Ascunde parola</string>
+    <string name="auth_show_password">Afișează parola</string>
+    <string name="auth_logout">Deconectare</string>
+    <string name="theme_light_mode">Mod Luminos</string>
+    <string name="theme_dark_mode">Mod Întunecat</string>
+    <string name="auth_send_reset_link">Trimite link de resetare</string>
+    <string name="auth_save_new_password">Salvează parola nouă</string>
+    <string name="auth_back_to_signin">Înapoi la autentificare</string>
+    <string name="auth_continue_google">Continuă cu Google</string>
+    <string name="auth_no_account">Nu ai cont?</string>
+    <string name="auth_have_account">Ai deja un cont?</string>
+    <string name="default_web_client_id" translatable="false">363643308921-99s276pfnuepfpne388v7t9soqdqej94.apps.googleusercontent.com</string>
+
+    <!-- Sorting -->
+    <string name="sort_default">Implicit</string>
+    <string name="sort_brand">Marcă (A-Z)</string>
+    <string name="sort_year">An (Cele mai noi)</string>
+
+    <!-- Car List -->
+    <string name="car_list_title">Mașinile tale</string>
+    <string name="car_add_button">Adaugă mașină</string>
+    <string name="car_list_search_placeholder">Caută mașini…</string>
+    <string name="car_list_empty_title">Nicio mașină încă</string>
+    <string name="car_list_empty_subtitle">Apasă pe Adaugă mașină pentru a începe.</string>
+    <string name="car_list_no_results_title">Nicio mașină găsită</string>
+    <string name="car_list_no_results_subtitle">Încearcă un alt termen de căutare.</string>
+    <string name="car_list_loading">Se încarcă mașinile…</string>
+
+    <!-- Discovery -->
+    <string name="car_add_title">Găsește-ți următoarea mașină</string>
+    <string name="discovery_subtitle">Spune-ne de ce ai nevoie, iar GoFind Auto va găsi cele mai bune potriviri.</string>
+    <string name="discovery_usage_label">Utilizare principală?</string>
+    <string name="discovery_usage_city">Navetă în oraș</string>
+    <string name="discovery_usage_highway">Drumuri lungi (Autostradă)</string>
+    <string name="discovery_usage_family">Familie / Spațiu</string>
+    <string name="discovery_priority_label">Care este prioritatea ta?</string>
+    <string name="discovery_priority_economy">Consum redus</string>
+    <string name="discovery_priority_reliability">Fiabilitate</string>
+    <string name="discovery_priority_luxury">Confort și Lux</string>
+    <string name="discovery_generate_button">Generează Recomandări</string>
+    <string name="discovery_recommendations_title">Recomandări AI</string>
+    <string name="discovery_save_button">Salvează în lista mea</string>
+    <string name="discovery_why_this_car">De ce această mașină?</string>
+    <string name="car_goal_section">Obiectivul tău de mentenanță</string>
+    <string name="car_goal_question">Care este obiectivul tău principal?</string>
+    <string name="car_goal_placeholder">Ex: Vreau să fie fiabilă pentru drumuri lungi.</string>
+    <string name="car_make_label">Marcă</string>
+    <string name="car_model_label">Model</string>
+    <string name="car_year_label">An</string>
+    <string name="car_confirm_scanned_data">Confirmă datele scanate</string>
+    <string name="car_scanned_data_subtitle">Am găsit următoarele informații. Selectează ce dorești să aplici în formular.</string>
+
+    <!-- Car Details -->
+    <string name="car_details_title">Detalii mașină</string>
+    <string name="car_diagnosis_title">Mecanic Virtual</string>
+    <string name="car_diagnosis_subtitle">Diagnoză auto asistată de AI</string>
+
+    <!-- Tires -->
+    <string name="tire_on_vehicle">Pe mașină</string>
+    <string name="tire_summary">%1$s \u00B7 %2$d/%3$d R%4$d</string>
+
+    <!-- Diagnosis -->
+    <string name="diagnosis_title">%s Diagnoză</string>
+    <string name="diagnosis_reset_chat">Resetează chat-ul</string>
+    <string name="diagnosis_initial_greeting">Salut! Sunt asistentul tău AI. Cu ce te pot ajuta astăzi în legătură cu %s?</string>
+    <string name="diagnosis_is_thinking">AI se gândește…</string>
+    <string name="diagnosis_placeholder">Descrie problema…</string>
+    <string name="diagnosis_send">Trimite</string>
+
+    <!-- Formatters -->
+    <string name="formatter_power_dual">%1$d&#160;cp / %2$d&#160;kW</string>
+    <string name="formatter_power_hp">%d&#160;cp</string>
+    <string name="formatter_engine_size">%s&#160;cmc</string>
+    <string name="formatter_inspection_valid_until">Valabil până la %s</string>
+
+    <!-- Validation -->
+    <string name="validation_negative_value">Valoarea nu poate fi negativă</string>
+    <string name="validation_invalid_format">Format invalid</string>
+    <string name="validation_email_blank">Email-ul nu poate fi gol</string>
+    <string name="validation_email_invalid">Adresă de email invalidă</string>
+    <string name="validation_password_blank">Parola nu poate fi goală</string>
+    <string name="validation_passwords_mismatch">Parolele nu coincid</string>
+    <string name="validation_fields_required">Toate câmpurile sunt obligatorii</string>
+    <string name="validation_brand_model_required">Te rugăm să introduci Marca și Modelul</string>
+
+    <!-- Errors -->
+    <string name="error_reset_email_failed">A apărut o eroare neașteptată la trimiterea email-ului de resetare</string>
+    <string name="error_password_reset_failed">A apărut o eroare neașteptată la resetarea parolei</string>
+    <string name="error_signin_failed">A apărut o eroare neașteptată la autentificare</string>
+    <string name="error_google_signin_failed">A apărut o eroare neașteptată la autentificarea cu Google</string>
+    <string name="error_google_no_credentials">Nu s-au găsit conturi Google pe acest dispozitiv.</string>
+    <string name="error_google_config_mismatch">Eroare de configurare Google Sign-In. Verifică Client ID și SHA-1.</string>
+    <string name="error_signup_failed">A apărut o eroare la înregistrare</string>
+    <string name="error_car_not_found">Mașina nu a fost găsită</string>
+    <string name="error_generic">A apărut o eroare</string>
+    <string name="error_failed_to_load_car">Eșec la încărcarea mașinii</string>
+    <string name="error_failed_to_save_car">Eșec la salvarea mașinii</string>
+    <string name="error_failed_to_sign_out">Eșec la deconectare</string>
+    <string name="error_ai_access_denied">Acces AI refuzat: Te rugăm să adaugi acest SHA-1 în Google Cloud Console pentru pachetul %1$s: \n\n%2$s</string>
+    <string name="error_ai_model_not_found">Model AI negăsit.</string>
+    <string name="error_ai_generic">Eroare AI: %s</string>
+</resources>

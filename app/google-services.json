@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "363643308921",
+    "project_id": "gofind-auto",
+    "storage_bucket": "gofind-auto.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:363643308921:android:10f38012bc99261005fda8",
+        "android_client_info": {
+          "package_name": "com.dariusepure.autoadvisor"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAv7BOOsNu_-ZOZelNBiYeSQ70F4wmGgrU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
