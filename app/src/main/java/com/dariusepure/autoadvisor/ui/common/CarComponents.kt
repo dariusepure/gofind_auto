@@ -53,7 +53,7 @@ fun ActionButtons(
     modifier: Modifier = Modifier,
     editLabel: String = stringResource(R.string.common_edit),
     deleteLabel: String = stringResource(R.string.common_delete),
-    accentColor: Color = Color(0xFF1A73E8),
+    accentColor: Color = MaterialTheme.colorScheme.primary,
     deleteColor: Color = statusExpiredRed,
     horizontalArrangement: Arrangement.Horizontal = Arrangement.spacedBy(8.dp),
     verticalAlignment: Alignment.Vertical = Alignment.CenterVertically

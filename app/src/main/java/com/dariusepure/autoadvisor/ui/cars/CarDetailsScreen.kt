@@ -53,7 +53,7 @@ fun CarDetailsScreen(
         viewModel.loadCarData(carId)
     }
 
-    val carAccentColor = Color(0xFF1A73E8)
+    val carAccentColor = MaterialTheme.colorScheme.primary
 
     Scaffold(
         modifier = modifier,

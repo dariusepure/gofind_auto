@@ -260,8 +260,8 @@ val unspecified_scheme = ColorFamily(
 @Composable
 fun GoFindAutoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    // Set dynamicColor to false to ensure our green theme is used instead of system colors
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
   val colorScheme = when {

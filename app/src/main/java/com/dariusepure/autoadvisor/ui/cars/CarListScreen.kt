@@ -169,8 +169,8 @@ fun CarListScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = onAddCarClick,
-                containerColor = Color(0xFF1A73E8),
-                contentColor = Color.White
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
                 Icon(Icons.Filled.Add, contentDescription = stringResource(R.string.car_add_button))
             }
