@@ -6,6 +6,7 @@ import com.dariusepure.autoadvisor.data.auth.AuthRepository
 import androidx.annotation.StringRes
 import com.dariusepure.autoadvisor.R
 import com.dariusepure.autoadvisor.data.cars.CarRepository
+import com.dariusepure.autoadvisor.domain.CarFilter
 import com.dariusepure.autoadvisor.domain.displayName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -37,15 +37,20 @@ class CarListViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
+    private val _filter = MutableStateFlow(CarFilter())
+    val filter = _filter.asStateFlow()
+
     val state: StateFlow<CarListUiState> = combine(
         carRepository.cars,
         _sortOrder,
-        _searchQuery
-    ) { cars, order, query ->
+        _searchQuery,
+        _filter
+    ) { cars, order, query, activeFilter ->
         if (cars.isEmpty()) {
             CarListUiState.Empty
         } else {
-            val filteredCars = if (query.isBlank()) {
+            // Apply Search Query
+            val searchedCars = if (query.isBlank()) {
                 cars
             } else {
                 cars.filter { car ->
@@ -55,12 +60,26 @@ class CarListViewModel @Inject constructor(
                 }
             }
 
-            val sortedCars = when (order) {
-                CarSortOrder.DATE_ADDED -> filteredCars
-                CarSortOrder.BRAND -> filteredCars.sortedBy { it.make }
-                CarSortOrder.YEAR -> filteredCars.sortedByDescending { it.year }
+            // Apply Advanced Filters
+            val filteredCars = searchedCars.filter { car ->
+                val brandMatch = activeFilter.selectedBrands.isEmpty() || activeFilter.selectedBrands.contains(car.make)
+                val fuelMatch = activeFilter.selectedFuelTypes.isEmpty() || activeFilter.selectedFuelTypes.contains(car.fuelType)
+                val yearFromMatch = activeFilter.yearFrom == null || car.year >= activeFilter.yearFrom
+                val yearToMatch = activeFilter.yearTo == null || car.year <= activeFilter.yearTo
+                
+                brandMatch && fuelMatch && yearFromMatch && yearToMatch
             }
-            CarListUiState.Success(sortedCars)
+
+            if (filteredCars.isEmpty()) {
+                CarListUiState.Empty
+            } else {
+                val sortedCars = when (order) {
+                    CarSortOrder.DATE_ADDED -> filteredCars
+                    CarSortOrder.BRAND -> filteredCars.sortedBy { it.make }
+                    CarSortOrder.YEAR -> filteredCars.sortedByDescending { it.year }
+                }
+                CarListUiState.Success(sortedCars)
+            }
         }
     }
         .catch { e ->
@@ -78,6 +97,10 @@ class CarListViewModel @Inject constructor(
 
     fun onSearchQueryChanged(query: String) {
         _searchQuery.value = query
+    }
+
+    fun onFilterChanged(newFilter: CarFilter) {
+        _filter.value = newFilter
     }
 
     fun onDeleteCar(carId: String) {

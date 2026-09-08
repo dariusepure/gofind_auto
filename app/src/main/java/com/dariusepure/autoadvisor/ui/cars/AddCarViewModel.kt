@@ -54,10 +54,19 @@ class AddCarViewModel @Inject constructor(
 
     suspend fun getCarData(carId: String): Car? = carRepository.getCar(carId)
 
-    fun getRecommendations(usage: String, priority: String) {
+    fun getRecommendations(
+        usage: String,
+        priority: String,
+        details: String = "",
+        year: String = ""
+    ) {
         viewModelScope.launch {
             _state.value = AddCarState.Pending
-            val criteria = "Main Usage: $usage, Priority: $priority"
+            val criteria = buildString {
+                append("Main Usage: $usage, Priority: $priority.")
+                if (details.isNotBlank()) append(" Preferred engine/generation details: $details.")
+                if (year.isNotBlank()) append(" Target production year: $year.")
+            }
             geminiRepository.getCarRecommendations(criteria)
                 .onSuccess { recommendations ->
                     _state.value = AddCarState.Recommendations(recommendations)

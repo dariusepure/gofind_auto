@@ -41,6 +41,8 @@ fun AddCarScreen(
 
     var selectedUsage by remember { mutableStateOf("") }
     var selectedPriority by remember { mutableStateOf("") }
+    var preferredDetails by remember { mutableStateOf("") }
+    var preferredYear by remember { mutableStateOf("") }
 
     val usages = listOf(
         stringResource(R.string.discovery_usage_city),
@@ -105,7 +107,18 @@ fun AddCarScreen(
                         onUsageChange = { selectedUsage = it },
                         selectedPriority = selectedPriority,
                         onPriorityChange = { selectedPriority = it },
-                        onGenerate = { viewModel.getRecommendations(selectedUsage, selectedPriority) },
+                        preferredDetails = preferredDetails,
+                        onDetailsChange = { preferredDetails = it },
+                        preferredYear = preferredYear,
+                        onYearChange = { preferredYear = it },
+                        onGenerate = { 
+                            viewModel.getRecommendations(
+                                selectedUsage, 
+                                selectedPriority,
+                                preferredDetails,
+                                preferredYear
+                            ) 
+                        },
                         usages = usages,
                         priorities = priorities
                     )
@@ -121,6 +134,10 @@ fun DiscoveryQuestionnaire(
     onUsageChange: (String) -> Unit,
     selectedPriority: String,
     onPriorityChange: (String) -> Unit,
+    preferredDetails: String,
+    onDetailsChange: (String) -> Unit,
+    preferredYear: String,
+    onYearChange: (String) -> Unit,
     onGenerate: () -> Unit,
     usages: List<String>,
     priorities: List<String>
@@ -130,7 +147,7 @@ fun DiscoveryQuestionnaire(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
             .padding(24.dp),
-        verticalArrangement = Arrangement.spacedBy(32.dp)
+        verticalArrangement = Arrangement.spacedBy(24.dp)
     ) {
         Column {
             Text(
@@ -174,7 +191,34 @@ fun DiscoveryQuestionnaire(
             }
         }
 
-        Spacer(Modifier.weight(1f))
+        // Extra details
+        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+            Text("Extra Details (Optional)", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+            OutlinedTextField(
+                value = preferredDetails,
+                onValueChange = onDetailsChange,
+                label = { Text("Engine, Generation, etc.") },
+                placeholder = { Text("Ex: 3.0 Petrol, G20, Hybrid") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                shape = MaterialTheme.shapes.medium
+            )
+            
+            OutlinedTextField(
+                value = preferredYear,
+                onValueChange = onYearChange,
+                label = { Text("Specific Year") },
+                placeholder = { Text("Ex: 2021") },
+                modifier = Modifier.fillMaxWidth(),
+                singleLine = true,
+                shape = MaterialTheme.shapes.medium,
+                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                    keyboardType = androidx.compose.ui.text.input.KeyboardType.Number
+                )
+            )
+        }
+
+        Spacer(Modifier.height(16.dp))
 
         Button(
             onClick = onGenerate,

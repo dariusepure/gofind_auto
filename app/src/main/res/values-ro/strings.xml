@@ -19,6 +19,9 @@
     <string name="common_language">Limbă</string>
     <string name="common_sort">Sortare</string>
     <string name="common_settings">Setări</string>
+    <string name="common_filters">Filtre</string>
+    <string name="common_apply">Aplică</string>
+    <string name="common_reset">Resetează</string>
     <string name="common_none">Niciunul</string>
     <string name="common_powered_by">Dezvoltat de Darius DevWorks</string>
 
@@ -96,6 +99,15 @@
     <string name="car_list_no_results_title">Nicio mașină găsită</string>
     <string name="car_list_no_results_subtitle">Încearcă un alt termen de căutare.</string>
     <string name="car_list_loading">Se încarcă mașinile…</string>
+
+    <!-- Filters -->
+    <string name="filter_brands">Mărci</string>
+    <string name="filter_fuel_types">Tip Combustibil</string>
+    <string name="filter_year_range">Interval Ani</string>
+    <string name="filter_year_from">Din</string>
+    <string name="filter_year_to">Până la</string>
+    <string name="filter_active_count">(%d active)</string>
+    <string name="filter_reset_all">Resetează tot</string>
 
     <!-- Discovery -->
     <string name="car_add_title">Găsește-ți următoarea mașină</string>
