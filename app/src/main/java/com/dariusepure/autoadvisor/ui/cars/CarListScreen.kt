@@ -36,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dariusepure.autoadvisor.domain.Car
+import com.dariusepure.autoadvisor.domain.displayName
 import com.dariusepure.autoadvisor.ui.common.ActionButtons
 import com.dariusepure.autoadvisor.ui.common.AutoSizeText
 import com.dariusepure.autoadvisor.ui.common.CarCardSkeleton
@@ -66,10 +67,10 @@ fun CarCard(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                AutoSizeText(
-                    text = car.make + " " + car.model,
+                Text(
+                    text = car.displayName,
                     style = MaterialTheme.typography.titleLarge,
-                    modifier = Modifier.weight(1f, fill = false)
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 Spacer(Modifier.height(4.dp))
                 

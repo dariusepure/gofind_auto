@@ -123,15 +123,15 @@
 
     <!-- Car Details -->
     <string name="car_details_title">Detalii mașină</string>
-    <string name="car_diagnosis_title">Mecanic Virtual</string>
-    <string name="car_diagnosis_subtitle">Diagnoză auto asistată de AI</string>
+    <string name="car_diagnosis_title">Întreabă GoFind Auto</string>
+    <string name="car_diagnosis_subtitle">Consultanță auto personalizată</string>
 
     <!-- Tires -->
     <string name="tire_on_vehicle">Pe mașină</string>
     <string name="tire_summary">%1$s \u00B7 %2$d/%3$d R%4$d</string>
 
     <!-- Diagnosis -->
-    <string name="diagnosis_title">%s Diagnoză</string>
+    <string name="diagnosis_title">%s</string>
     <string name="diagnosis_reset_chat">Resetează chat-ul</string>
     <string name="diagnosis_initial_greeting">Salut! Sunt asistentul tău AI. Cu ce te pot ajuta astăzi în legătură cu %s?</string>
     <string name="diagnosis_is_thinking">AI se gândește…</string>

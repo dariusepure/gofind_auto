@@ -21,6 +21,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dariusepure.autoadvisor.R
@@ -53,8 +54,6 @@ fun CarDetailsScreen(
         viewModel.loadCarData(carId)
     }
 
-    val carAccentColor = MaterialTheme.colorScheme.primary
-
     Scaffold(
         modifier = modifier,
         topBar = {
@@ -73,12 +72,13 @@ fun CarDetailsScreen(
             is CarDetailsUiState.Error -> ErrorState(message = s.message, onRetry = { viewModel.loadCarData(carId) })
             is CarDetailsUiState.Success -> {
                 val car = s.car
+                val carAccentColor = MaterialTheme.colorScheme.primary
 
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(padding)
-                        .padding(horizontal = 24.dp),
+                        .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
@@ -107,6 +107,16 @@ fun CarDetailsScreen(
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center
                             )
+                            
+                            val summary = CarFormatters.getCarSummary(context, car)
+                            if (summary.isNotBlank()) {
+                                Text(
+                                    text = summary,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
+
                             if (car.maintenanceGoal.isNotBlank()) {
                                 Surface(
                                     color = MaterialTheme.colorScheme.secondaryContainer,
@@ -124,8 +134,35 @@ fun CarDetailsScreen(
                                 }
                             }
                         }
+                    }
 
-                        if (car.recommendationReason.isNotBlank()) {
+                    // --- BENTO GRID FOR AI ADVISOR ---
+                    item {
+                        BentoCard(
+                            onClick = onDiagnosisClick,
+                            modifier = Modifier.fillMaxWidth().height(160.dp),
+                            containerColor = carAccentColor.copy(alpha = 0.15f),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Icon(Icons.Default.AutoAwesome, null, modifier = Modifier.size(48.dp), tint = carAccentColor)
+                            Spacer(Modifier.weight(1f))
+                            Text(
+                                text = stringResource(R.string.car_diagnosis_title),
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = carAccentColor
+                            )
+                            Text(
+                                text = stringResource(R.string.car_diagnosis_subtitle),
+                                style = MaterialTheme.typography.bodyMedium,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                                textAlign = TextAlign.Center
+                            )
+                        }
+                    }
+
+                    if (car.recommendationReason.isNotBlank()) {
+                        item {
                             OutlinedCard(
                                 modifier = Modifier.fillMaxWidth(),
                                 shape = MaterialTheme.shapes.medium
@@ -134,7 +171,7 @@ fun CarDetailsScreen(
                                     Text(
                                         text = stringResource(R.string.discovery_why_this_car),
                                         style = MaterialTheme.typography.titleSmall,
-                                        color = MaterialTheme.colorScheme.primary
+                                        color = carAccentColor
                                     )
                                     Spacer(Modifier.height(4.dp))
                                     Text(
@@ -142,35 +179,6 @@ fun CarDetailsScreen(
                                         style = MaterialTheme.typography.bodyMedium
                                     )
                                 }
-                            }
-                        }
-                    }
-
-                    // --- PRIMARY ACTION: AI ADVISOR ---
-                    item {
-                        Surface(
-                            onClick = onDiagnosisClick,
-                            color = MaterialTheme.colorScheme.primary,
-                            contentColor = MaterialTheme.colorScheme.onPrimary,
-                            shape = MaterialTheme.shapes.extraLarge,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Column(
-                                modifier = Modifier.padding(24.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Icon(Icons.Default.AutoAwesome, null, modifier = Modifier.size(40.dp))
-                                Spacer(Modifier.height(12.dp))
-                                Text(
-                                    text = "Ask GoFind Auto",
-                                    style = MaterialTheme.typography.titleLarge,
-                                    fontWeight = FontWeight.Bold
-                                )
-                                Text(
-                                    text = "Get personalized maintenance tips",
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
-                                )
                             }
                         }
                     }

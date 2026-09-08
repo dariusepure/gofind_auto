@@ -38,10 +38,22 @@ class GeminiRepository @Inject constructor(
         get() = remoteConfig.getString("gemini_model_name").ifBlank { "gemini-1.5-flash" }
 
     private val temperature: Float
-        get() = remoteConfig.getDouble("gemini_temperature").toFloat()
+        get() = remoteConfig.getDouble("gemini_temperature").let { if (it == 0.0) 0.7f else it.toFloat() }
 
     private val systemPrompt: String
         get() = remoteConfig.getString("gemini_prompt")
+
+    private val personaInstruction: String
+        get() = remoteConfig.getString("gemini_persona_instruction")
+
+    private val formattingInstruction: String
+        get() = remoteConfig.getString("gemini_formatting_instruction")
+
+    private val scanningPrompt: String
+        get() = remoteConfig.getString("gemini_scanning_prompt")
+
+    private val recommendationPrompt: String
+        get() = remoteConfig.getString("gemini_recommendation_prompt")
 
     private val geminiApiKey: String
         get() = remoteConfig.getString("gemini_api_key")
@@ -88,24 +100,7 @@ class GeminiRepository @Inject constructor(
                 ?: throw Exception("Could not read file")
             val base64Data = Base64.encodeToString(bytes, Base64.NO_WRAP)
 
-            val prompt = """
-                Extract technical details from this vehicle document.
-                Analyze the document and look for these fields:
-                - make, model, year (4 digits), fuelType, engineSize (cc), power (hp or kW).
-                
-                CRITICAL VALIDATION:
-                1. Verify Year: must be a realistic year (e.g., 1900-2026).
-                2. Verify Engine Size: must be in cubic centimeters (cc).
-                3. Brand (make) MUST be returned in Title Case (e.g., "Bmw", "Volkswagen").
-                4. NUMERIC FIELDS MUST contain ONLY the raw number, NO units.
-                5. If a value is unreadable, illogical, or not found, return null for that field.
-                
-                Return ONLY a JSON ARRAY containing one object with these keys: 
-                make, model, year, fuelType, engineSize, power, powerUnit.
-                
-                Standard fuelType: Petrol, Diesel, Electric, Hybrid, LPG.
-                Standard powerUnit: 'hp'. If kW is found, convert to hp (kW * 1.36).
-            """.trimIndent()
+            val prompt = scanningPrompt
 
             val request = GeminiRequest(
                 contents = listOf(
@@ -160,13 +155,13 @@ class GeminiRepository @Inject constructor(
             "Do not repeat the greeting. Answer directly."
         }
 
-        val personaInstruction = "Act as GoFind Auto, a professional car mechanic. $greetingRule Use human-friendly terms only. Talk to the user as if you are their trusted advisor in a garage. If you see recent maintenance or relevant history, mention it naturally."
-        val formattingInstruction = "STRICTLY PROHIBIT markdown bold (**text**) or italics (_text_). Respond using ONLY plain text. Use simple paragraphs or plain lists with dashes (-) if needed."
+        val dynamicPersona = "$personaInstruction $greetingRule"
+        val dynamicFormatting = formattingInstruction
         val languageInstruction = "IMPORTANT: Please respond in $language."
         
         val finalizedPrompt = systemPrompt.replace("{{context}}", carContext)
             .replace("{{maintenance_goal}}", maintenanceGoal.ifBlank { "General reliability and maintenance." })
-        val fullPrompt = "$finalizedPrompt\n\nINSTRUCTIONS:\n- $personaInstruction\n- $formattingInstruction\n- $languageInstruction\n\nUser: $prompt"
+        val fullPrompt = "$finalizedPrompt\n\nINSTRUCTIONS:\n- $dynamicPersona\n- $dynamicFormatting\n- $languageInstruction\n\nUser: $prompt"
 
         val userContent = Content(
             role = "user",
@@ -186,23 +181,10 @@ class GeminiRepository @Inject constructor(
             val europeanList = europeanBrands.joinToString(", ")
             val globalList = globalBrands.joinToString(", ")
             
-            val prompt = """
-                Based on these user criteria: $criteria
-                Suggest 3-5 specific car models (make, model).
-                
-                STRICT BRAND RULES:
-                1. You MUST ONLY suggest cars from these lists of brands:
-                   European: $europeanList
-                   Global/Other: $globalList
-                2. PRIORITIZE European brands if they fit the user's criteria.
-                
-                For each car, provide a short 'recommendationReason' (max 2 sentences) in the same language as the user's criteria.
-                
-                Return ONLY a JSON ARRAY of objects with these keys:
-                make, model, recommendationReason.
-                
-                CRITICAL: Return valid JSON only.
-            """.trimIndent()
+            val prompt = recommendationPrompt
+                .replace("{{criteria}}", criteria)
+                .replace("{{european_brands}}", europeanList)
+                .replace("{{global_brands}}", globalList)
 
             val request = GeminiRequest(
                 contents = listOf(

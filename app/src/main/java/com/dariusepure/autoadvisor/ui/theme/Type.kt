@@ -1,12 +1,8 @@
 package com.dariusepure.autoadvisor.ui.theme
 
 import androidx.compose.material3.Typography
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import com.dariusepure.autoadvisor.R
-
 import androidx.compose.ui.text.googlefonts.GoogleFont
 import androidx.compose.ui.text.googlefonts.Font
 
@@ -19,7 +15,7 @@ val provider = GoogleFont.Provider(
 val bodyFontFamily = FontFamily.Default
 val displayFontFamily = FontFamily.Default
 
-// Default Material 3 typography values
+// Default Material 3 typography values (Borrowed from Auto Analytics structure)
 val baseline = Typography()
 
 val AppTypography = Typography(
@@ -39,5 +35,3 @@ val AppTypography = Typography(
     labelMedium = baseline.labelMedium.copy(fontFamily = bodyFontFamily),
     labelSmall = baseline.labelSmall.copy(fontFamily = bodyFontFamily),
 )
-
-

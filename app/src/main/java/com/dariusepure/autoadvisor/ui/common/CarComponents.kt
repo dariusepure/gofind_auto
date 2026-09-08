@@ -45,6 +45,72 @@ fun AutoSizeText(
     )
 }
 
+@Composable
+fun BentoCard(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    containerColor: Color = MaterialTheme.colorScheme.surface,
+    horizontalAlignment: Alignment.Horizontal = Alignment.Start,
+    content: @Composable ColumnScope.() -> Unit
+) {
+    Card(
+        onClick = onClick,
+        modifier = modifier,
+        shape = MaterialTheme.shapes.large,
+        colors = CardDefaults.cardColors(containerColor = containerColor)
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(16.dp)
+                .fillMaxSize(),
+            horizontalAlignment = horizontalAlignment,
+            content = content
+        )
+    }
+}
+
+@Composable
+fun StatusBadge(
+    label: String,
+    color: Color
+) {
+    Surface(
+        color = color.copy(alpha = 0.12f),
+        contentColor = color,
+        shape = MaterialTheme.shapes.extraSmall,
+        modifier = Modifier.padding(vertical = 4.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelSmall,
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp),
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun StatItem(
+    label: String, 
+    value: String, 
+    color: Color = MaterialTheme.colorScheme.primary,
+    modifier: Modifier = Modifier
+) {
+    Column(modifier = modifier) {
+        Text(
+            text = label, 
+            style = MaterialTheme.typography.labelSmall, 
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = value, 
+            style = MaterialTheme.typography.titleLarge, 
+            fontWeight = FontWeight.Bold, 
+            color = color
+        )
+    }
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ActionButtons(
@@ -73,8 +139,8 @@ fun ActionButtons(
                 FilledIconButton(
                     onClick = onEdit,
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = accentColor,
-                        contentColor = Color.White
+                        containerColor = accentColor.copy(alpha = 0.1f),
+                        contentColor = accentColor
                     ),
                     modifier = Modifier.size(36.dp)
                 ) {
@@ -92,8 +158,8 @@ fun ActionButtons(
             FilledIconButton(
                 onClick = onDelete,
                 colors = IconButtonDefaults.filledIconButtonColors(
-                    containerColor = deleteColor,
-                    contentColor = Color.White
+                    containerColor = deleteColor.copy(alpha = 0.1f),
+                    contentColor = deleteColor
                 ),
                 modifier = Modifier.size(36.dp)
             ) {

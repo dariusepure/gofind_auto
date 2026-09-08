@@ -123,15 +123,15 @@
 
     <!-- Car Details -->
     <string name="car_details_title">Car Details</string>
-    <string name="car_diagnosis_title">Virtual Mechanic</string>
-    <string name="car_diagnosis_subtitle">AI-powered vehicle diagnosis</string>
+    <string name="car_diagnosis_title">Ask GoFind Auto</string>
+    <string name="car_diagnosis_subtitle">Get personalized maintenance tips</string>
 
     <!-- Tires -->
     <string name="tire_on_vehicle">On Vehicle</string>
     <string name="tire_summary">%1$s \u00B7 %2$d/%3$d R%4$d</string>
 
     <!-- Diagnosis -->
-    <string name="diagnosis_title">%s Diagnosis</string>
+    <string name="diagnosis_title">%s</string>
     <string name="diagnosis_reset_chat">Reset Chat</string>
     <string name="diagnosis_initial_greeting">Hello! I am your AI assistant. How can I help you with your %s today?</string>
     <string name="diagnosis_is_thinking">AI is thinking...</string>
