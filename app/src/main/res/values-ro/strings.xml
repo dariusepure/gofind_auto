@@ -19,10 +19,6 @@
     <string name="common_language">Limbă</string>
     <string name="common_sort">Sortare</string>
     <string name="common_settings">Setări</string>
-    <string name="common_filters">Filtre</string>
-    <string name="common_apply">Aplică</string>
-    <string name="common_reset">Resetează</string>
-    <string name="common_none">Niciunul</string>
     <string name="common_powered_by">Dezvoltat de Darius DevWorks</string>
 
     <!-- Colors -->
@@ -75,6 +71,9 @@
     <string name="auth_hide_password">Ascunde parola</string>
     <string name="auth_show_password">Afișează parola</string>
     <string name="auth_logout">Deconectare</string>
+    <string name="settings_section_general">General</string>
+    <string name="settings_section_appearance">Aspect</string>
+    <string name="settings_section_account">Cont</string>
     <string name="theme_light_mode">Mod Luminos</string>
     <string name="theme_dark_mode">Mod Întunecat</string>
     <string name="auth_send_reset_link">Trimite link de resetare</string>
@@ -100,15 +99,6 @@
     <string name="car_list_no_results_subtitle">Încearcă un alt termen de căutare.</string>
     <string name="car_list_loading">Se încarcă mașinile…</string>
 
-    <!-- Filters -->
-    <string name="filter_brands">Mărci</string>
-    <string name="filter_fuel_types">Tip Combustibil</string>
-    <string name="filter_year_range">Interval Ani</string>
-    <string name="filter_year_from">Din</string>
-    <string name="filter_year_to">Până la</string>
-    <string name="filter_active_count">(%d active)</string>
-    <string name="filter_reset_all">Resetează tot</string>
-
     <!-- Discovery -->
     <string name="car_add_title">Găsește-ți următoarea mașină</string>
     <string name="discovery_subtitle">Spune-ne de ce ai nevoie, iar GoFind Auto va găsi cele mai bune potriviri.</string>
@@ -120,6 +110,26 @@
     <string name="discovery_priority_economy">Consum redus</string>
     <string name="discovery_priority_reliability">Fiabilitate</string>
     <string name="discovery_priority_luxury">Confort și Lux</string>
+    <string name="discovery_engine_range">Capacitate Cilindrică (cmc)</string>
+    <string name="discovery_power_range">Putere (cp)</string>
+    <string name="discovery_label_fuel">Tip Combustibil</string>
+    <string name="discovery_label_transmission">Transmisie</string>
+    <string name="discovery_label_body">Tip Caroserie</string>
+    <string name="discovery_label_drive">Tracțiune</string>
+    <string name="discovery_choice_manual">Manuală</string>
+    <string name="discovery_choice_automatic">Automată</string>
+    <string name="discovery_choice_fwd">Față</string>
+    <string name="discovery_choice_rwd">Spate</string>
+    <string name="discovery_choice_awd">Integrală</string>
+    <string name="discovery_body_sedan">Sedan</string>
+    <string name="discovery_body_suv">SUV</string>
+    <string name="discovery_body_hatchback">Hatchback</string>
+    <string name="discovery_body_wagon">Break</string>
+    <string name="discovery_body_coupe">Coupe</string>
+    <string name="discovery_body_convertible">Decapotabilă</string>
+    <string name="discovery_year_range">Interval Ani</string>
+    <string name="discovery_range_from">Din</string>
+    <string name="discovery_range_to">Până la</string>
     <string name="discovery_generate_button">Generează Recomandări</string>
     <string name="discovery_recommendations_title">Recomandări AI</string>
     <string name="discovery_save_button">Salvează în lista mea</string>

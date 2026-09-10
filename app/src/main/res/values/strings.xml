@@ -19,10 +19,6 @@
     <string name="common_language">Language</string>
     <string name="common_sort">Sort</string>
     <string name="common_settings">Settings</string>
-    <string name="common_filters">Filters</string>
-    <string name="common_apply">Apply</string>
-    <string name="common_reset">Reset</string>
-    <string name="common_none">None</string>
     <string name="common_powered_by">Developed by Darius DevWorks</string>
 
     <!-- Colors -->
@@ -75,6 +71,9 @@
     <string name="auth_hide_password">Hide password</string>
     <string name="auth_show_password">Show password</string>
     <string name="auth_logout">Logout</string>
+    <string name="settings_section_general">General</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_section_account">Account</string>
     <string name="theme_light_mode">Light Mode</string>
     <string name="theme_dark_mode">Dark Mode</string>
     <string name="auth_send_reset_link">Send Reset Link</string>
@@ -100,15 +99,6 @@
     <string name="car_list_no_results_subtitle">Try a different search term.</string>
     <string name="car_list_loading">Loading your cars</string>
 
-    <!-- Filters -->
-    <string name="filter_brands">Brands</string>
-    <string name="filter_fuel_types">Fuel Types</string>
-    <string name="filter_year_range">Year Range</string>
-    <string name="filter_year_from">From</string>
-    <string name="filter_year_to">To</string>
-    <string name="filter_active_count">(%d active)</string>
-    <string name="filter_reset_all">Reset all</string>
-
     <!-- Discovery -->
     <string name="car_add_title">Find Your Next Car</string>
     <string name="discovery_subtitle">Tell us what you need, and GoFind Auto will find the best matches.</string>
@@ -120,6 +110,26 @@
     <string name="discovery_priority_economy">Fuel Economy</string>
     <string name="discovery_priority_reliability">Reliability</string>
     <string name="discovery_priority_luxury">Comfort &amp; Luxury</string>
+    <string name="discovery_engine_range">Engine Size (cc)</string>
+    <string name="discovery_power_range">Power (hp)</string>
+    <string name="discovery_label_fuel">Fuel Type</string>
+    <string name="discovery_label_transmission">Transmission</string>
+    <string name="discovery_label_body">Body Type</string>
+    <string name="discovery_label_drive">Drive Type</string>
+    <string name="discovery_choice_manual">Manual</string>
+    <string name="discovery_choice_automatic">Automatic</string>
+    <string name="discovery_choice_fwd">FWD</string>
+    <string name="discovery_choice_rwd">RWD</string>
+    <string name="discovery_choice_awd">AWD</string>
+    <string name="discovery_body_sedan">Sedan</string>
+    <string name="discovery_body_suv">SUV</string>
+    <string name="discovery_body_hatchback">Hatchback</string>
+    <string name="discovery_body_wagon">Wagon</string>
+    <string name="discovery_body_coupe">Coupe</string>
+    <string name="discovery_body_convertible">Convertible</string>
+    <string name="discovery_year_range">Year Range</string>
+    <string name="discovery_range_from">From</string>
+    <string name="discovery_range_to">To</string>
     <string name="discovery_generate_button">Generate Recommendations</string>
     <string name="discovery_recommendations_title">AI Recommendations</string>
     <string name="discovery_save_button">Save to My List</string>

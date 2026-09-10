@@ -11,14 +11,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
-import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
@@ -39,7 +36,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dariusepure.autoadvisor.domain.Car
-import com.dariusepure.autoadvisor.domain.CarFilter
 import com.dariusepure.autoadvisor.domain.displayName
 import com.dariusepure.autoadvisor.ui.common.ActionButtons
 import com.dariusepure.autoadvisor.ui.common.AutoSizeText
@@ -48,9 +44,6 @@ import com.dariusepure.autoadvisor.ui.common.EmptyState
 import com.dariusepure.autoadvisor.ui.common.ErrorState
 import com.dariusepure.autoadvisor.ui.common.DeleteConfirmationDialog
 import com.dariusepure.autoadvisor.ui.common.CarFormatters
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.text.input.KeyboardType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,14 +105,10 @@ fun CarListScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val sortOrder by viewModel.sortOrder.collectAsStateWithLifecycle()
     val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
-    val activeFilter by viewModel.filter.collectAsStateWithLifecycle()
     val haptic = LocalHapticFeedback.current
 
     var carToDelete by remember { mutableStateOf<String?>(null) }
     var sortMenuExpanded by remember { mutableStateOf(false) }
-    var showFilterSheet by remember { mutableStateOf(false) }
-
-    val filterSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 
     if (carToDelete != null) {
         DeleteConfirmationDialog(
@@ -130,21 +119,6 @@ fun CarListScreen(
             },
             onDismiss = { carToDelete = null }
         )
-    }
-
-    if (showFilterSheet) {
-        ModalBottomSheet(
-            onDismissRequest = { showFilterSheet = false },
-            sheetState = filterSheetState
-        ) {
-            FilterSheetContent(
-                activeFilter = activeFilter,
-                onFilterChanged = {
-                    viewModel.onFilterChanged(it)
-                },
-                onDismiss = { showFilterSheet = false }
-            )
-        }
     }
 
     Scaffold(
@@ -158,22 +132,6 @@ fun CarListScreen(
                     )
                 },
                 actions = {
-                    Box {
-                        IconButton(onClick = { showFilterSheet = true }) {
-                            BadgedBox(
-                                badge = {
-                                    if (activeFilter.isActive) {
-                                        Badge { Text("") }
-                                    }
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Default.FilterList,
-                                    contentDescription = stringResource(R.string.common_filters)
-                                )
-                            }
-                        }
-                    }
                     Box {
                         IconButton(onClick = { sortMenuExpanded = true }) {
                             Icon(
@@ -288,126 +246,6 @@ fun CarListScreen(
                     )
                 }
             }
-        }
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun FilterSheetContent(
-    activeFilter: CarFilter,
-    onFilterChanged: (CarFilter) -> Unit,
-    onDismiss: () -> Unit
-) {
-    var tempFilter by remember { mutableStateOf(activeFilter) }
-
-    val fuelTypes = listOf("Petrol", "Diesel", "Electric", "Hybrid", "LPG", "CNG", "Hydrogen")
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-            .padding(bottom = 32.dp),
-        verticalArrangement = Arrangement.spacedBy(24.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = stringResource(R.string.common_filters),
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold
-            )
-            TextButton(onClick = { tempFilter = CarFilter() }) {
-                Text(stringResource(R.string.filter_reset_all))
-            }
-        }
-
-        // Brands
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text(stringResource(R.string.filter_brands), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-            LazyRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                contentPadding = PaddingValues(end = 16.dp)
-            ) {
-                items(allCarBrands) { brand ->
-                    FilterChip(
-                        selected = tempFilter.selectedBrands.contains(brand),
-                        onClick = {
-                            val newBrands = if (tempFilter.selectedBrands.contains(brand)) {
-                                tempFilter.selectedBrands - brand
-                            } else {
-                                tempFilter.selectedBrands + brand
-                            }
-                            tempFilter = tempFilter.copy(selectedBrands = newBrands)
-                        },
-                        label = { Text(brand) }
-                    )
-                }
-            }
-        }
-
-        // Fuel Types
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text(stringResource(R.string.filter_fuel_types), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                maxItemsInEachRow = 4
-            ) {
-                fuelTypes.forEach { fuel ->
-                    FilterChip(
-                        selected = tempFilter.selectedFuelTypes.contains(fuel),
-                        onClick = {
-                            val newFuels = if (tempFilter.selectedFuelTypes.contains(fuel)) {
-                                tempFilter.selectedFuelTypes - fuel
-                            } else {
-                                tempFilter.selectedFuelTypes + fuel
-                            }
-                            tempFilter = tempFilter.copy(selectedFuelTypes = newFuels)
-                        },
-                        label = { Text(fuel) }
-                    )
-                }
-            }
-        }
-
-        // Year Range
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Text(stringResource(R.string.filter_year_range), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                OutlinedTextField(
-                    value = tempFilter.yearFrom?.toString() ?: "",
-                    onValueChange = { val yr = it.toIntOrNull(); tempFilter = tempFilter.copy(yearFrom = yr) },
-                    label = { Text(stringResource(R.string.filter_year_from)) },
-                    modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
-                )
-                OutlinedTextField(
-                    value = tempFilter.yearTo?.toString() ?: "",
-                    onValueChange = { val yr = it.toIntOrNull(); tempFilter = tempFilter.copy(yearTo = yr) },
-                    label = { Text(stringResource(R.string.filter_year_to)) },
-                    modifier = Modifier.weight(1f),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    singleLine = true
-                )
-            }
-        }
-
-        Button(
-            onClick = {
-                onFilterChanged(tempFilter)
-                onDismiss()
-            },
-            modifier = Modifier.fillMaxWidth().height(56.dp),
-            shape = MaterialTheme.shapes.medium
-        ) {
-            Text(stringResource(R.string.common_apply), fontWeight = FontWeight.Bold)
         }
     }
 }

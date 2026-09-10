@@ -14,8 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.icons.outlined.DirectionsCar
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.Button
@@ -39,8 +37,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.dariusepure.autoadvisor.R
 import com.dariusepure.autoadvisor.ui.common.AuthFooter
-import com.dariusepure.autoadvisor.ui.common.ModernAppLogo
 import com.dariusepure.autoadvisor.ui.common.LanguageSelector
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.material.icons.filled.Visibility
@@ -109,14 +109,21 @@ fun SignInContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            ModernAppLogo(
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
             Text(
-                text = stringResource(R.string.app_name),
-                style = MaterialTheme.typography.displaySmall,
+                text = buildAnnotatedString {
+                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
+                        append("Go")
+                    }
+                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
+                        append("Find")
+                    }
+                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
+                        append(" Auto")
+                    }
+                },
+                style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.ExtraBold),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.padding(bottom = 8.dp)
             )
             Text(
                 text = stringResource(R.string.auth_signin_subtitle),
@@ -219,22 +226,10 @@ fun SignInContent(
                     contentColor = MaterialTheme.colorScheme.primary
                 )
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.DirectionsCar,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(Modifier.width(12.dp))
-                    Text(
-                        text = stringResource(R.string.auth_continue_google),
-                        fontWeight = FontWeight.Bold
-                    )
-                }
+                Text(
+                    text = stringResource(R.string.auth_continue_google),
+                    fontWeight = FontWeight.Bold
+                )
             }
 
             Row(

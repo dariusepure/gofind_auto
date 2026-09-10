@@ -6,7 +6,6 @@ import com.dariusepure.autoadvisor.data.auth.AuthRepository
 import androidx.annotation.StringRes
 import com.dariusepure.autoadvisor.R
 import com.dariusepure.autoadvisor.data.cars.CarRepository
-import com.dariusepure.autoadvisor.domain.CarFilter
 import com.dariusepure.autoadvisor.domain.displayName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,20 +36,16 @@ class CarListViewModel @Inject constructor(
     private val _searchQuery = MutableStateFlow("")
     val searchQuery = _searchQuery.asStateFlow()
 
-    private val _filter = MutableStateFlow(CarFilter())
-    val filter = _filter.asStateFlow()
-
     val state: StateFlow<CarListUiState> = combine(
         carRepository.cars,
         _sortOrder,
-        _searchQuery,
-        _filter
-    ) { cars, order, query, activeFilter ->
+        _searchQuery
+    ) { cars, order, query ->
         if (cars.isEmpty()) {
             CarListUiState.Empty
         } else {
             // Apply Search Query
-            val searchedCars = if (query.isBlank()) {
+            val filteredCars = if (query.isBlank()) {
                 cars
             } else {
                 cars.filter { car ->
@@ -58,16 +53,6 @@ class CarListViewModel @Inject constructor(
                             car.model.contains(query, ignoreCase = true) ||
                             car.displayName.contains(query, ignoreCase = true)
                 }
-            }
-
-            // Apply Advanced Filters
-            val filteredCars = searchedCars.filter { car ->
-                val brandMatch = activeFilter.selectedBrands.isEmpty() || activeFilter.selectedBrands.contains(car.make)
-                val fuelMatch = activeFilter.selectedFuelTypes.isEmpty() || activeFilter.selectedFuelTypes.contains(car.fuelType)
-                val yearFromMatch = activeFilter.yearFrom == null || car.year >= activeFilter.yearFrom
-                val yearToMatch = activeFilter.yearTo == null || car.year <= activeFilter.yearTo
-                
-                brandMatch && fuelMatch && yearFromMatch && yearToMatch
             }
 
             if (filteredCars.isEmpty()) {
@@ -97,10 +82,6 @@ class CarListViewModel @Inject constructor(
 
     fun onSearchQueryChanged(query: String) {
         _searchQuery.value = query
-    }
-
-    fun onFilterChanged(newFilter: CarFilter) {
-        _filter.value = newFilter
     }
 
     fun onDeleteCar(carId: String) {

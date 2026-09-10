@@ -55,17 +55,43 @@ class AddCarViewModel @Inject constructor(
     suspend fun getCarData(carId: String): Car? = carRepository.getCar(carId)
 
     fun getRecommendations(
-        usage: String,
-        priority: String,
-        details: String = "",
-        year: String = ""
+        brand: String = "",
+        model: String = "",
+        yearFrom: String = "",
+        yearTo: String = "",
+        engineFrom: String = "",
+        engineTo: String = "",
+        powerFrom: String = "",
+        powerTo: String = "",
+        fuelType: String = ""
     ) {
         viewModelScope.launch {
             _state.value = AddCarState.Pending
             val criteria = buildString {
-                append("Main Usage: $usage, Priority: $priority.")
-                if (details.isNotBlank()) append(" Preferred engine/generation details: $details.")
-                if (year.isNotBlank()) append(" Target production year: $year.")
+                if (brand.isNotBlank()) append("Target Brand: $brand. ")
+                if (model.isNotBlank()) append("Target Model: $model. ")
+                if (fuelType.isNotBlank()) append("Fuel Type: $fuelType. ")
+                
+                // Flexible range logic
+                when {
+                    yearFrom.isNotBlank() && yearTo.isNotBlank() -> append("Year Range: $yearFrom to $yearTo. ")
+                    yearFrom.isNotBlank() -> append("Produced from year $yearFrom onwards. ")
+                    yearTo.isNotBlank() -> append("Produced up to year $yearTo. ")
+                }
+
+                when {
+                    engineFrom.isNotBlank() && engineTo.isNotBlank() -> append("Engine Size Range: $engineFrom cc to $engineTo cc. ")
+                    engineFrom.isNotBlank() -> append("Engine Size: minimum $engineFrom cc. ")
+                    engineTo.isNotBlank() -> append("Engine Size: maximum $engineTo cc. ")
+                }
+
+                when {
+                    powerFrom.isNotBlank() && powerTo.isNotBlank() -> append("Power Range: $powerFrom hp to $powerTo hp. ")
+                    powerFrom.isNotBlank() -> append("Power: minimum $powerFrom hp. ")
+                    powerTo.isNotBlank() -> append("Power: maximum $powerTo hp. ")
+                }
+                
+                if (this.isEmpty()) append("Suggest 3-5 reliable and popular cars for general use.")
             }
             geminiRepository.getCarRecommendations(criteria)
                 .onSuccess { recommendations ->
@@ -86,6 +112,10 @@ class AddCarViewModel @Inject constructor(
                     make = data.make ?: "Unknown",
                     model = data.model ?: "Unknown",
                     year = data.year?.roundToInt() ?: 0,
+                    fuelType = data.fuelType ?: "",
+                    engineSize = data.engineSize?.roundToInt()?.toString() ?: "",
+                    power = data.power?.roundToInt() ?: 0,
+                    powerUnit = data.powerUnit ?: "hp",
                     recommendationReason = data.recommendationReason ?: "",
                     updatedAt = Date()
                 )

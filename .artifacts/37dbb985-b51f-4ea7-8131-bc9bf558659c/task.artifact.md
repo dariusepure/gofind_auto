@@ -1,0 +1,6 @@
+- [x] Update `AddCarViewModel.kt` recommendations logic (simplified & partial ranges)
+- [x] Refactor `AddCarScreen.kt` UI
+    - [x] Remove extra ChoiceRows
+    - [x] Make Brand/Model optional in UI and button state
+    - [x] Update call to `getRecommendations`
+- [x] Verify functionality

@@ -1,5 +1,6 @@
 package com.dariusepure.autoadvisor.ui
 
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -61,7 +62,7 @@ fun AppNavigation(
     NavHost(
         navController = navController,
         startDestination = finalStartDestination,
-        modifier = modifier,
+        modifier = modifier.fillMaxSize(),
         enterTransition = { EnterTransition.None },
         exitTransition = { ExitTransition.None },
         popEnterTransition = { EnterTransition.None },

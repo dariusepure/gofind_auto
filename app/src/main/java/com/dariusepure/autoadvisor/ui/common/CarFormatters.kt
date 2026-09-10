@@ -8,6 +8,7 @@ import kotlin.math.roundToInt
 
 object CarFormatters {
     private val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
+    private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     fun formatPower(context: android.content.Context, car: Car): String {
         val hpValue: Int
@@ -38,4 +39,6 @@ object CarFormatters {
     }
 
     fun formatDate(date: Date): String = dateFormat.format(date)
+
+    fun formatTime(timestamp: Long): String = timeFormat.format(Date(timestamp))
 }

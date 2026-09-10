@@ -124,9 +124,10 @@ object AppModule {
                 2. PRIORITIZE European brands if they fit the user's criteria.
                 
                 For each car, provide a short 'recommendationReason' (max 2 sentences) in the same language as the user's criteria.
+                Include technical details for better context.
                 
                 Return ONLY a JSON ARRAY of objects with these keys:
-                make, model, recommendationReason.
+                make, model, year, fuelType, engineSize, power, powerUnit, recommendationReason.
                 
                 CRITICAL: Return valid JSON only.
             """.trimIndent()

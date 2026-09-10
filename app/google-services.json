@@ -12,7 +12,20 @@
           "package_name": "com.dariusepure.autoadvisor"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "363643308921-gpk6csv3ue544j6q7h8jcvc6ab7e5g8f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dariusepure.autoadvisor",
+            "certificate_hash": "c10c6df2fb85fc2373f01da647f4f40ccb3f685c"
+          }
+        },
+        {
+          "client_id": "363643308921-99s276pfnuepfpne388v7t9soqdqej94.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAv7BOOsNu_-ZOZelNBiYeSQ70F4wmGgrU"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "363643308921-99s276pfnuepfpne388v7t9soqdqej94.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
