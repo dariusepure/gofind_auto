@@ -20,28 +20,20 @@ val globalBrands = listOf(
 
 val allCarBrands = (europeanBrands + globalBrands).sorted()
 
-val brandModels = mapOf(
-    "Volkswagen" to listOf("Golf", "Passat", "Tiguan", "Polo", "Touareg", "Arteon", "T-Roc", "ID.3", "ID.4"),
-    "BMW" to listOf("1 Series", "3 Series", "5 Series", "7 Series", "X1", "X3", "X5", "X6", "M3", "M5"),
-    "Mercedes-Benz" to listOf("A-Class", "C-Class", "E-Class", "S-Class", "GLA", "GLC", "GLE", "GLS", "EQE", "EQS"),
-    "Audi" to listOf("A1", "A3", "A4", "A6", "A8", "Q3", "Q5", "Q7", "Q8", "e-tron"),
-    "Porsche" to listOf("911", "Cayenne", "Macan", "Panamera", "Taycan", "718 Boxster"),
-    "Opel" to listOf("Corsa", "Astra", "Insignia", "Mokka", "Grandland"),
-    "Renault" to listOf("Clio", "Megane", "Captur", "Kadjar", "Zoe", "Austral"),
-    "Peugeot" to listOf("208", "308", "508", "2008", "3008", "5008"),
-    "Citroën" to listOf("C3", "C4", "C5 X", "C5 Aircross"),
-    "Dacia" to listOf("Logan", "Sandero", "Duster", "Jogger", "Spring"),
-    "Volvo" to listOf("XC40", "XC60", "XC90", "V60", "V90", "S60", "S90"),
-    "Skoda" to listOf("Fabia", "Octavia", "Superb", "Kamiq", "Karoq", "Kodiaq"),
-    "Seat" to listOf("Ibiza", "Leon", "Arona", "Ateca", "Tarraco"),
-    "Cupra" to listOf("Formentor", "Leon", "Ateca", "Born"),
-    "Toyota" to listOf("Corolla", "Yaris", "RAV4", "Camry", "C-HR", "Land Cruiser", "Hilux", "Supra"),
-    "Honda" to listOf("Civic", "CR-V", "HR-V", "Jazz", "Accord"),
-    "Nissan" to listOf("Qashqai", "Juke", "X-Trail", "Leaf", "Ariya"),
-    "Mazda" to listOf("Mazda2", "Mazda3", "Mazda6", "CX-30", "CX-5", "CX-60"),
-    "Hyundai" to listOf("i10", "i20", "i30", "Tucson", "Santa Fe", "Ioniq 5", "Ioniq 6"),
-    "Kia" to listOf("Ceed", "Sportage", "Sorento", "Niro", "EV6", "Stinger"),
-    "Ford" to listOf("Fiesta", "Focus", "Mondeo", "Kuga", "Puma", "Mustang", "Ranger"),
-    "Chevrolet" to listOf("Camaro", "Corvette", "Cruze", "Equinox"),
-    "Tesla" to listOf("Model 3", "Model S", "Model X", "Model Y")
-)
+val carBrands = listOf(
+    "Abarth", "Acura", "Alfa Romeo", "Alpine", "Aston Martin", "Audi", "Bentley", "Bmw", "Bugatti", "Buick",
+    "Byd", "Cadillac", "Caterham", "Chevrolet", "Chrysler", "Citroën", "Cupra", "Dacia", "Daewoo", "Daihatsu",
+    "Dodge", "Ds", "Ferrari", "Fiat", "Ford", "Genesis", "Gmc", "Honda", "Hummer", "Hyundai", "Infiniti",
+    "Isuzu", "Jaguar", "Jeep", "Kia", "Koenigsegg", "Lada", "Lamborghini", "Lancia", "Land Rover", "Lexus", 
+    "Lincoln", "Lotus", "Lucid", "Maserati", "Maybach", "Mazda", "Mclaren", "Mercedes-Benz", "Mg", "Mini", 
+    "Mitsubishi", "Morgan", "Moskvitch", "Nissan", "Opel", "Pagani", "Peugeot", "Polestar", "Porsche", "Ram", 
+    "Renault", "Rimac", "Rolls-Royce", "Rover", "Saab", "Seat", "Skoda", "Smart", "Ssangyong", "Subaru", 
+    "Suzuki", "Tesla", "Toyota", "Trabant", "Triumph", "Tvr", "Vauxhall", "Volkswagen", "Volvo", "Wartburg"
+).sorted() + "Other"
+
+val tireBrands = listOf(
+    "Michelin", "Continental", "Bridgestone", "Goodyear", "Pirelli", "Dunlop", "Hankook", "Yokohama",
+    "Nokian", "Kumho", "Toyo", "Vredestein", "Falken", "Bfgoodrich", "Cooper", "General Tire", "Uniroyal",
+    "Kleber", "Fulda", "Debica", "Sava", "Tigar", "Matador", "Viking", "Barum", "Laufenn", "Firestone",
+    "Nexen", "Apollo", "Gt Radial"
+).sorted() + "Other"

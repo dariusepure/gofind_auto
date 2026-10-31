@@ -108,7 +108,6 @@ val unspecified_scheme = ColorFamily(
 @Composable
 fun GoFindAutoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Keep dynamicColor false to preserve our green primary branding
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {

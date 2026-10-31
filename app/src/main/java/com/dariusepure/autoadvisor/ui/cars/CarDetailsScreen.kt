@@ -1,10 +1,14 @@
 package com.dariusepure.autoadvisor.ui.cars
 
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
@@ -16,7 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -73,6 +79,7 @@ fun CarDetailsScreen(
             is CarDetailsUiState.Success -> {
                 val car = s.car
                 val carAccentColor = MaterialTheme.colorScheme.primary
+                val logoRes = remember(car.make) { CarFormatters.getBrandLogoResource(car.make) }
 
                 LazyColumn(
                     modifier = Modifier
@@ -82,54 +89,86 @@ fun CarDetailsScreen(
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
                     item {
-                        Column(
-                            modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        Card(
+                            modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+                            shape = RoundedCornerShape(22.dp),
+                            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f))
                         ) {
-                            Box(
+                            Column(
                                 modifier = Modifier
-                                    .size(80.dp)
-                                    .clip(CircleShape)
-                                    .background(carAccentColor.copy(alpha = 0.1f)),
-                                contentAlignment = Alignment.Center
+                                    .fillMaxWidth()
+                                    .padding(20.dp),
+                                horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Icon(
-                                    Icons.Outlined.DirectionsCar,
-                                    null,
-                                    modifier = Modifier.size(48.dp),
-                                    tint = carAccentColor
-                                )
-                            }
-                            Spacer(Modifier.height(16.dp))
-                            Text(
-                                text = car.displayName,
-                                style = MaterialTheme.typography.headlineMedium,
-                                fontWeight = FontWeight.Bold,
-                                textAlign = TextAlign.Center
-                            )
-                            
-                            val summary = CarFormatters.getCarSummary(context, car)
-                            if (summary.isNotBlank()) {
-                                Text(
-                                    text = summary,
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-
-                            if (car.maintenanceGoal.isNotBlank()) {
-                                Surface(
-                                    color = MaterialTheme.colorScheme.secondaryContainer,
-                                    shape = MaterialTheme.shapes.small,
-                                    modifier = Modifier.padding(top = 8.dp)
+                                Box(
+                                    modifier = Modifier
+                                        .size(72.dp)
+                                        .clip(RoundedCornerShape(20.dp))
+                                        .background(Color.White)
+                                        .border(
+                                            width = 1.dp,
+                                            color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
+                                            shape = RoundedCornerShape(20.dp)
+                                        ),
+                                    contentAlignment = Alignment.Center
                                 ) {
-                                    Row(
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                        verticalAlignment = Alignment.CenterVertically
+                                    if (logoRes != null) {
+                                        Image(
+                                            painter = painterResource(logoRes),
+                                            contentDescription = car.make,
+                                            modifier = Modifier
+                                                .size(54.dp)
+                                                .padding(6.dp),
+                                            contentScale = ContentScale.Fit
+                                        )
+                                    } else {
+                                        Icon(
+                                            imageVector = Icons.Outlined.DirectionsCar,
+                                            contentDescription = car.make,
+                                            modifier = Modifier.size(40.dp),
+                                            tint = carAccentColor
+                                        )
+                                    }
+                                }
+                                Spacer(Modifier.height(14.dp))
+                                Text(
+                                    text = car.displayName,
+                                    style = MaterialTheme.typography.headlineMedium,
+                                    fontWeight = FontWeight.Bold,
+                                    textAlign = TextAlign.Center
+                                )
+                                
+                                val summary = CarFormatters.getCarSummary(context, car)
+                                if (summary.isNotBlank()) {
+                                    Spacer(Modifier.height(4.dp))
+                                    Text(
+                                        text = summary,
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+
+                                if (car.vin.isNotBlank()) {
+                                    Spacer(Modifier.height(12.dp))
+                                    VinBadge(vin = car.vin)
+                                }
+
+                                if (car.maintenanceGoal.isNotBlank()) {
+                                    Spacer(Modifier.height(12.dp))
+                                    Surface(
+                                        color = MaterialTheme.colorScheme.secondaryContainer,
+                                        shape = RoundedCornerShape(10.dp)
                                     ) {
-                                        Icon(Icons.Outlined.Lightbulb, null, modifier = Modifier.size(16.dp))
-                                        Spacer(Modifier.width(8.dp))
-                                        Text(car.maintenanceGoal, style = MaterialTheme.typography.labelMedium)
+                                        Row(
+                                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                                            verticalAlignment = Alignment.CenterVertically
+                                        ) {
+                                            Icon(Icons.Outlined.Lightbulb, null, modifier = Modifier.size(16.dp))
+                                            Spacer(Modifier.width(8.dp))
+                                            Text(car.maintenanceGoal, style = MaterialTheme.typography.labelMedium)
+                                        }
                                     }
                                 }
                             }
@@ -141,17 +180,18 @@ fun CarDetailsScreen(
                         BentoCard(
                             onClick = onDiagnosisClick,
                             modifier = Modifier.fillMaxWidth().height(160.dp),
-                            containerColor = carAccentColor.copy(alpha = 0.15f),
+                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
-                            Icon(Icons.Default.AutoAwesome, null, modifier = Modifier.size(48.dp), tint = carAccentColor)
+                            Icon(Icons.Default.AutoAwesome, null, modifier = Modifier.size(44.dp), tint = carAccentColor)
                             Spacer(Modifier.weight(1f))
                             Text(
                                 text = stringResource(R.string.car_diagnosis_title),
                                 style = MaterialTheme.typography.titleLarge,
                                 fontWeight = FontWeight.Bold,
-                                color = carAccentColor
+                                color = MaterialTheme.colorScheme.onSurface
                             )
+                            Spacer(Modifier.height(2.dp))
                             Text(
                                 text = stringResource(R.string.car_diagnosis_subtitle),
                                 style = MaterialTheme.typography.bodyMedium,
@@ -163,20 +203,24 @@ fun CarDetailsScreen(
 
                     if (car.recommendationReason.isNotBlank()) {
                         item {
-                            OutlinedCard(
+                            Card(
                                 modifier = Modifier.fillMaxWidth(),
-                                shape = MaterialTheme.shapes.medium
+                                shape = RoundedCornerShape(18.dp),
+                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f))
                             ) {
                                 Column(modifier = Modifier.padding(16.dp)) {
                                     Text(
                                         text = stringResource(R.string.discovery_why_this_car),
                                         style = MaterialTheme.typography.titleSmall,
-                                        color = carAccentColor
+                                        color = carAccentColor,
+                                        fontWeight = FontWeight.Bold
                                     )
-                                    Spacer(Modifier.height(4.dp))
+                                    Spacer(Modifier.height(6.dp))
                                     Text(
                                         text = car.recommendationReason,
-                                        style = MaterialTheme.typography.bodyMedium
+                                        style = MaterialTheme.typography.bodyMedium,
+                                        color = MaterialTheme.colorScheme.onSurface
                                     )
                                 }
                             }

@@ -1,6 +1,7 @@
 package com.dariusepure.autoadvisor.ui.auth
 
 import android.content.Context
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,6 +39,7 @@ import androidx.compose.ui.res.stringResource
 import com.dariusepure.autoadvisor.R
 import com.dariusepure.autoadvisor.ui.common.AuthFooter
 import com.dariusepure.autoadvisor.ui.common.LanguageSelector
+import com.dariusepure.autoadvisor.ui.common.ModernAppLogo
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
@@ -98,7 +100,10 @@ fun SignInContent(
     val context = LocalContext.current
 
     Scaffold(
-        modifier = modifier
+        modifier = modifier,
+        bottomBar = {
+            AuthFooter()
+        }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -109,28 +114,32 @@ fun SignInContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
+            Spacer(modifier = Modifier.height(32.dp))
+
+            ModernAppLogo(
+                size = 80.dp,
+                modifier = Modifier.padding(bottom = 24.dp)
+            )
+
             Text(
                 text = buildAnnotatedString {
                     withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
-                        append("Go")
+                        append("GoFind")
                     }
                     withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.primary)) {
-                        append("Find")
-                    }
-                    withStyle(style = SpanStyle(color = MaterialTheme.colorScheme.onBackground)) {
                         append(" Auto")
                     }
                 },
                 style = MaterialTheme.typography.displayMedium.copy(fontWeight = FontWeight.ExtraBold),
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(bottom = 8.dp)
+                modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
             )
             Text(
                 text = stringResource(R.string.auth_signin_subtitle),
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier.padding(bottom = 8.dp),
             )
 
             (state as? SignInState.Error)?.let { error ->
@@ -140,7 +149,7 @@ fun SignInContent(
                     shape = MaterialTheme.shapes.medium,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 24.dp),
+                        .padding(top = 16.dp),
                 ) {
                     Text(
                         text = error.message,
@@ -160,7 +169,7 @@ fun SignInContent(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 24.dp),
+                    .padding(top = 16.dp),
             )
             OutlinedTextField(
                 value = password,
@@ -199,7 +208,7 @@ fun SignInContent(
                 enabled = !submitting,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 20.dp),
+                    .padding(top = 16.dp),
             ) {
                 if (submitting) {
                     CircularProgressIndicator(
@@ -218,7 +227,7 @@ fun SignInContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 12.dp),
-                border = androidx.compose.foundation.BorderStroke(
+                border = BorderStroke(
                     width = 1.dp,
                     color = MaterialTheme.colorScheme.primary
                 ),
@@ -250,8 +259,6 @@ fun SignInContent(
             )
 
             Spacer(Modifier.height(32.dp))
-            AuthFooter()
-            Spacer(Modifier.height(16.dp))
         }
     }
 }
@@ -269,4 +276,3 @@ private fun SignInScreenPreview() {
         )
     }
 }
-
