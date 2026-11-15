@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace = "com.dariusepure.autoadvisor"
+    namespace = "com.dariusepure.gofindauto"
     compileSdk = 37
 
     defaultConfig {
-        applicationId = "com.dariusepure.autoadvisor"
+        applicationId = "com.dariusepure.gofindauto"
         minSdk = 26
         targetSdk = 37
         versionCode = 1

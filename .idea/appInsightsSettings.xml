@@ -22,7 +22,7 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="com.dariusepure.autoadvisor" />
+                  <option name="appId" value="com.dariusepure.gofindauto" />
                   <option name="mobileSdkAppId" value="1:363643308921:android:10f38012bc99261005fda8" />
                   <option name="projectId" value="gofind-auto" />
                   <option name="projectNumber" value="363643308921" />

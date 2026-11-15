@@ -46,7 +46,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.dariusepure.autoadvisor.fileprovider"
+            android:authorities="com.dariusepure.gofindauto.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
