@@ -95,21 +95,21 @@
     <string name="car_add_button">Scanează / Adaugă mașină</string>
     <string name="car_list_search_placeholder">Caută mașini…</string>
     <string name="car_list_empty_title">Nicio mașină încă</string>
-    <string name="car_list_empty_subtitle">Importă o poză cu o mașină pentru ca AI-ul să o ghicească și identifice!</string>
+    <string name="car_list_empty_subtitle">Importă o poză cu o mașină pentru a o identifica automat!</string>
     <string name="car_list_no_results_title">Nicio mașină găsită</string>
     <string name="car_list_no_results_subtitle">Încearcă un alt termen de căutare.</string>
     <string name="car_list_loading">Se încarcă mașinile…</string>
 
-    <!-- AI Scan & Discovery -->
-    <string name="ai_scan_hero_title">Identificator AI Mașini</string>
-    <string name="ai_scan_hero_subtitle">Importă sau fă o poză oricărei mașini, iar AI-ul va ghici marca, modelul, anul și specificațiile!</string>
+    <!-- Scan & Discovery -->
+    <string name="ai_scan_hero_title">Identificator Mașină</string>
+    <string name="ai_scan_hero_subtitle">Importă sau fă o poză oricărei mașini pentru a identifica marca, modelul, anul și specificațiile!</string>
     <string name="ai_scan_upload_button">Încarcă Poză Mașină</string>
     <string name="ai_scan_camera_button">Fă Poză</string>
-    <string name="ai_scan_analyzing">AI-ul identifică poza mașinii…</string>
-    <string name="ai_scan_result_title">Mașină Identificată de AI</string>
+    <string name="ai_scan_analyzing">Se analizează poza mașinii…</string>
+    <string name="ai_scan_result_title">Vehicul Identificat</string>
     <string name="ai_scan_save_to_garage">Salvează în Garaj</string>
-    <string name="car_add_title">Scaner AI</string>
-    <string name="discovery_subtitle">Încarcă o poză pentru ca AI-ul să identifice mașina.</string>
+    <string name="car_add_title">Scaner Mașini</string>
+    <string name="discovery_subtitle">Încarcă o poză pentru a detecta detaliile vehiculului.</string>
     <string name="discovery_usage_label">Utilizare principală?</string>
     <string name="discovery_usage_city">Navetă în oraș</string>
     <string name="discovery_usage_highway">Drumuri lungi (Autostradă)</string>
@@ -129,23 +129,23 @@
     <string name="discovery_year_range">Interval Ani</string>
     <string name="discovery_range_from">De la</string>
     <string name="discovery_range_to">Până la</string>
-    <string name="discovery_generate_button">Căutare &amp; Identificare AI</string>
-    <string name="discovery_recommendations_title">Mașini Potrivite de AI</string>
+    <string name="discovery_generate_button">Căutare &amp; Identificare</string>
+    <string name="discovery_recommendations_title">Mașini Potrivite</string>
     <string name="discovery_save_button">Salvează</string>
-    <string name="discovery_why_this_car">Analiză AI</string>
+    <string name="discovery_why_this_car">Analiză &amp; Detalii</string>
     <string name="car_make_label">Marcă</string>
     <string name="car_model_label">Model</string>
 
     <!-- Details & Diagnosis -->
     <string name="car_details_title">Detalii Mașină</string>
-    <string name="car_diagnosis_title">Mecanic &amp; Diagnoză AI</string>
-    <string name="car_diagnosis_subtitle">Discută cu mecanicul AI pentru sfaturi tehnice și mentenanță.</string>
-    <string name="diagnosis_title">Mecanic AI</string>
-    <string name="diagnosis_placeholder">Întreabă mecanicul AI despre această mașină…</string>
+    <string name="car_diagnosis_title">Mecanic &amp; Diagnoză</string>
+    <string name="car_diagnosis_subtitle">Discută cu mecanicul digital pentru sfaturi tehnice și mentenanță.</string>
+    <string name="diagnosis_title">Mecanic</string>
+    <string name="diagnosis_placeholder">Întreabă despre această mașină…</string>
     <string name="diagnosis_reset_chat">Resetează Chat-ul</string>
-    <string name="diagnosis_is_thinking">Mecanicul AI scrie…</string>
+    <string name="diagnosis_is_thinking">Mecanicul scrie…</string>
     <string name="diagnosis_send">Trimite</string>
-    <string name="diagnosis_initial_greeting">Salut! Sunt mecanicul tău AI. Cu ce te pot ajuta astăzi?</string>
+    <string name="diagnosis_initial_greeting">Salut! Sunt consultantul tău auto. Cu ce te pot ajuta astăzi?</string>
 
     <!-- Error & Validation Messages -->
     <string name="formatter_power_dual">%1$d cp (%2$d kW)</string>
@@ -163,9 +163,9 @@
     <string name="error_password_reset_failed">Resetarea parolei a eșuat</string>
     <string name="error_car_not_found">Mașina nu a fost găsită</string>
     <string name="error_generic">A apărut o eroare neașteptată</string>
-    <string name="error_ai_access_denied">Acces refuzat la serviciul AI</string>
-    <string name="error_ai_model_not_found">Modelul AI nu a fost găsit</string>
-    <string name="error_ai_generic">Eroare Serviciu AI</string>
+    <string name="error_ai_access_denied">Acces refuzat la serviciul de scanare</string>
+    <string name="error_ai_model_not_found">Modelul nu a fost găsit</string>
+    <string name="error_ai_generic">Eroare Serviciu Scanare</string>
     <string name="validation_email_blank">Te rugăm să introduci adresa de email</string>
     <string name="validation_email_invalid">Te rugăm să introduci un email valid</string>
     <string name="validation_password_blank">Te rugăm să introduci parola</string>

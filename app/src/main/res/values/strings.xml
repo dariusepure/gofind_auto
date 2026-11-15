@@ -95,21 +95,21 @@
     <string name="car_add_button">Scan / Add car</string>
     <string name="car_list_search_placeholder">Search cars...</string>
     <string name="car_list_empty_title">No cars yet</string>
-    <string name="car_list_empty_subtitle">Import a car photo to let AI guess and identify it!</string>
+    <string name="car_list_empty_subtitle">Import a car photo to automatically identify it!</string>
     <string name="car_list_no_results_title">No cars found</string>
     <string name="car_list_no_results_subtitle">Try a different search term.</string>
     <string name="car_list_loading">Loading your cars</string>
 
-    <!-- AI Scan & Discovery -->
-    <string name="ai_scan_hero_title">AI Car Identifier</string>
-    <string name="ai_scan_hero_subtitle">Import or take a photo of any car, and AI will guess the make, model, year, and technical specs!</string>
+    <!-- Scan & Discovery -->
+    <string name="ai_scan_hero_title">Car Identifier</string>
+    <string name="ai_scan_hero_subtitle">Import or take a photo of any car to instantly detect the make, model, year, and technical specs!</string>
     <string name="ai_scan_upload_button">Upload Car Photo</string>
     <string name="ai_scan_camera_button">Take Photo</string>
-    <string name="ai_scan_analyzing">AI is identifying the car photo...</string>
-    <string name="ai_scan_result_title">AI Identified Car</string>
+    <string name="ai_scan_analyzing">Analyzing car photo...</string>
+    <string name="ai_scan_result_title">Identified Vehicle</string>
     <string name="ai_scan_save_to_garage">Save to Garage</string>
-    <string name="car_add_title">AI Scanner</string>
-    <string name="discovery_subtitle">Upload a photo of a car to let AI identify it.</string>
+    <string name="car_add_title">Car Scanner</string>
+    <string name="discovery_subtitle">Upload a car photo to detect vehicle details.</string>
     <string name="discovery_usage_label">Main usage?</string>
     <string name="discovery_usage_city">City Commuting</string>
     <string name="discovery_usage_highway">Long Highway Trips</string>
@@ -129,23 +129,23 @@
     <string name="discovery_year_range">Year Range</string>
     <string name="discovery_range_from">From</string>
     <string name="discovery_range_to">To</string>
-    <string name="discovery_generate_button">AI Search &amp; Identify</string>
-    <string name="discovery_recommendations_title">AI Matched Cars</string>
+    <string name="discovery_generate_button">Search &amp; Identify</string>
+    <string name="discovery_recommendations_title">Matched Cars</string>
     <string name="discovery_save_button">Save</string>
-    <string name="discovery_why_this_car">AI Analysis</string>
+    <string name="discovery_why_this_car">Analysis &amp; Insights</string>
     <string name="car_make_label">Make</string>
     <string name="car_model_label">Model</string>
 
     <!-- Details & Diagnosis -->
     <string name="car_details_title">Car Details</string>
-    <string name="car_diagnosis_title">AI Mechanic &amp; Diagnosis</string>
-    <string name="car_diagnosis_subtitle">Chat with AI for diagnosis, maintenance tips, or technical advice.</string>
-    <string name="diagnosis_title">AI Mechanic</string>
-    <string name="diagnosis_placeholder">Ask AI mechanic about this car...</string>
+    <string name="car_diagnosis_title">Smart Mechanic &amp; Diagnosis</string>
+    <string name="car_diagnosis_subtitle">Chat with your digital mechanic for diagnosis, maintenance tips, or technical advice.</string>
+    <string name="diagnosis_title">Digital Mechanic</string>
+    <string name="diagnosis_placeholder">Ask about this car...</string>
     <string name="diagnosis_reset_chat">Reset Chat</string>
-    <string name="diagnosis_is_thinking">AI Mechanic is typing...</string>
+    <string name="diagnosis_is_thinking">Mechanic is typing...</string>
     <string name="diagnosis_send">Send</string>
-    <string name="diagnosis_initial_greeting">Hello! I\'m your AI mechanic. How can I assist you with your car today?</string>
+    <string name="diagnosis_initial_greeting">Hello! I\'m your car consultant. How can I assist you with your car today?</string>
 
     <!-- Error & Validation Messages -->
     <string name="formatter_power_dual">%1$d hp (%2$d kW)</string>
@@ -163,9 +163,9 @@
     <string name="error_password_reset_failed">Failed to reset password</string>
     <string name="error_car_not_found">Car not found</string>
     <string name="error_generic">An unexpected error occurred</string>
-    <string name="error_ai_access_denied">Access denied to AI service</string>
-    <string name="error_ai_model_not_found">AI Model not found</string>
-    <string name="error_ai_generic">AI Service Error</string>
+    <string name="error_ai_access_denied">Access denied to scan service</string>
+    <string name="error_ai_model_not_found">Model not found</string>
+    <string name="error_ai_generic">Scan Service Error</string>
     <string name="validation_email_blank">Please enter your email</string>
     <string name="validation_email_invalid">Please enter a valid email</string>
     <string name="validation_password_blank">Please enter your password</string>

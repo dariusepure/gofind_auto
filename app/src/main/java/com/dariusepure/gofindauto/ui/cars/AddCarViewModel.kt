@@ -119,6 +119,14 @@ class AddCarViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = AddCarState.Pending
             try {
+                val extraInfo = buildString {
+                    if (!data.productionYears.isNullOrBlank()) append("Production Years: ${data.productionYears}. ")
+                    if (!data.bodyType.isNullOrBlank()) append("Body Type: ${data.bodyType}. ")
+                    if (!data.color.isNullOrBlank()) append("Color: ${data.color}. ")
+                    if (!data.availableEngines.isNullOrBlank()) append("Available Engines: ${data.availableEngines}. ")
+                    if (!data.recommendationReason.isNullOrBlank()) append(data.recommendationReason)
+                }.trim()
+
                 val car = Car(
                     id = "",
                     make = data.make ?: "Unknown",
@@ -128,7 +136,7 @@ class AddCarViewModel @Inject constructor(
                     engineSize = data.engineSize?.roundToInt()?.toString() ?: "",
                     power = data.power?.roundToInt() ?: 0,
                     powerUnit = data.powerUnit ?: "hp",
-                    recommendationReason = data.recommendationReason ?: "",
+                    recommendationReason = extraInfo,
                     updatedAt = Date()
                 )
                 carRepository.createCar(car)

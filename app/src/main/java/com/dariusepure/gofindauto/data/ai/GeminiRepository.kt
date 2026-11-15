@@ -130,25 +130,29 @@ class GeminiRepository @Inject constructor(
         return try {
             val prompt = scanningPrompt.ifBlank {
                 """
-                Extract technical details from this vehicle photo or document.
-                Analyze the image and look for these fields:
-                - make, model, vin, year (4 digits), fuelType, engineSize (cc), power (hp or kW), color.
-                
-                COLOR MAPPING (Return one of these standard values for 'color'):
-                - White, Black, Silver, Gray, Blue, Red, Brown, Green, Yellow, Orange.
+                Extract complete vehicle details from this car photo or document.
+                Analyze the image and identify:
+                - 'make': Brand/Make in Title Case (e.g., "Bmw", "Volkswagen").
+                - 'model': Model name (e.g., "3 Series", "Golf", "Nexia").
+                - 'year': Estimated year of the specific car shown.
+                - 'productionYears': Generation production years range (e.g., "1995 - 2002").
+                - 'bodyType': Body style (e.g., "Sedan", "Hatchback", "SUV", "Coupe", "Wagon", "Convertible").
+                - 'color': Detected car color in the photo (e.g., "Blue", "Black", "Silver", "White", "Red", "Gray", "Green", "Yellow", "Orange").
+                - 'fuelType': Primary fuel type (Petrol, Diesel, Electric, Hybrid, LPG).
+                - 'engineSize': Engine size in cc.
+                - 'power': Power in hp.
+                - 'availableEngines': Common engine variants/options for this generation/model (e.g., "1.5i (75hp), 1.5 16V (90hp)").
+                - 'recommendationReason': Short summary of key facts about this model and generation.
                 
                 CRITICAL VALIDATION:
                 1. Verify Year: must be a realistic year (e.g., 1900-2026).
                 2. Verify Engine Size: must be in cubic centimeters (cc).
-                3. Brand (make) MUST be returned in Title Case (e.g., "Bmw", "Volkswagen").
+                3. Brand (make) MUST be returned in Title Case.
                 4. NUMERIC FIELDS MUST contain ONLY the raw number, NO units.
-                5. If a value is unreadable, illogical, or not found, return null for that field.
+                5. If a value is unreadable or not found, return null for that field.
                 
                 Return ONLY a JSON ARRAY containing one object with these keys: 
-                make, model, year, fuelType, engineSize, power, powerUnit, color, recommendationReason.
-                
-                Standard fuelType: Petrol, Diesel, Electric, Hybrid, LPG.
-                Standard powerUnit: 'hp'. If kW is found, convert to hp (kW * 1.36).
+                make, model, year, productionYears, bodyType, color, fuelType, engineSize, power, powerUnit, availableEngines, recommendationReason.
                 """.trimIndent()
             }
 
@@ -192,25 +196,29 @@ class GeminiRepository @Inject constructor(
 
             val prompt = scanningPrompt.ifBlank {
                 """
-                Extract technical details from this vehicle photo or document.
-                Analyze the image and look for these fields:
-                - make, model, vin, year (4 digits), fuelType, engineSize (cc), power (hp or kW), color.
-                
-                COLOR MAPPING (Return one of these standard values for 'color'):
-                - White, Black, Silver, Gray, Blue, Red, Brown, Green, Yellow, Orange.
+                Extract complete vehicle details from this car photo or document.
+                Analyze the image and identify:
+                - 'make': Brand/Make in Title Case (e.g., "Bmw", "Volkswagen").
+                - 'model': Model name (e.g., "3 Series", "Golf", "Nexia").
+                - 'year': Estimated year of the specific car shown.
+                - 'productionYears': Generation production years range (e.g., "1995 - 2002").
+                - 'bodyType': Body style (e.g., "Sedan", "Hatchback", "SUV", "Coupe", "Wagon", "Convertible").
+                - 'color': Detected car color in the photo (e.g., "Blue", "Black", "Silver", "White", "Red", "Gray", "Green", "Yellow", "Orange").
+                - 'fuelType': Primary fuel type (Petrol, Diesel, Electric, Hybrid, LPG).
+                - 'engineSize': Engine size in cc.
+                - 'power': Power in hp.
+                - 'availableEngines': Common engine variants/options for this generation/model (e.g., "1.5i (75hp), 1.5 16V (90hp)").
+                - 'recommendationReason': Short summary of key facts about this model and generation.
                 
                 CRITICAL VALIDATION:
                 1. Verify Year: must be a realistic year (e.g., 1900-2026).
                 2. Verify Engine Size: must be in cubic centimeters (cc).
-                3. Brand (make) MUST be returned in Title Case (e.g., "Bmw", "Volkswagen").
+                3. Brand (make) MUST be returned in Title Case.
                 4. NUMERIC FIELDS MUST contain ONLY the raw number, NO units.
-                5. If a value is unreadable, illogical, or not found, return null for that field.
+                5. If a value is unreadable or not found, return null for that field.
                 
                 Return ONLY a JSON ARRAY containing one object with these keys: 
-                make, model, year, fuelType, engineSize, power, powerUnit, color, recommendationReason.
-                
-                Standard fuelType: Petrol, Diesel, Electric, Hybrid, LPG.
-                Standard powerUnit: 'hp'. If kW is found, convert to hp (kW * 1.36).
+                make, model, year, productionYears, bodyType, color, fuelType, engineSize, power, powerUnit, availableEngines, recommendationReason.
                 """.trimIndent()
             }
 
@@ -310,7 +318,7 @@ class GeminiRepository @Inject constructor(
                 Include technical details for better context.
                 
                 Return ONLY a JSON ARRAY of objects with these keys:
-                make, model, year, fuelType, engineSize, power, powerUnit, recommendationReason.
+                make, model, year, productionYears, bodyType, color, fuelType, engineSize, power, powerUnit, availableEngines, recommendationReason.
                 
                 CRITICAL: Return valid JSON only.
                 """.trimIndent()

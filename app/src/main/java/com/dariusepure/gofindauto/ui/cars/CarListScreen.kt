@@ -4,11 +4,10 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -20,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Sort
@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.LocalGasStation
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Speed
+import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.outlined.DirectionsCar
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -84,6 +85,9 @@ fun CarCard(
         if (car.power > 0) {
             list.add(Pair(Icons.Default.Speed, CarFormatters.formatPower(context, car)))
         }
+        if (car.engineSize.isNotBlank()) {
+            list.add(Pair(Icons.Default.Tune, "${car.engineSize} cc"))
+        }
         list
     }
 
@@ -106,7 +110,7 @@ fun CarCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp)
+                .padding(14.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -115,13 +119,13 @@ fun CarCard(
                 // Brand Logo Avatar
                 Box(
                     modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(16.dp))
+                        .size(44.dp)
+                        .clip(RoundedCornerShape(14.dp))
                         .background(Color.White)
                         .border(
                             width = 1.dp,
                             color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f),
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(14.dp)
                         ),
                     contentAlignment = Alignment.Center
                 ) {
@@ -130,15 +134,15 @@ fun CarCard(
                             painter = painterResource(logoRes),
                             contentDescription = car.make,
                             modifier = Modifier
-                                .size(36.dp)
-                                .padding(4.dp),
+                                .size(32.dp)
+                                .padding(3.dp),
                             contentScale = ContentScale.Fit
                         )
                     } else {
                         Icon(
                             imageVector = Icons.Outlined.DirectionsCar,
                             contentDescription = car.make,
-                            modifier = Modifier.size(28.dp),
+                            modifier = Modifier.size(26.dp),
                             tint = MaterialTheme.colorScheme.primary
                         )
                     }
@@ -146,42 +150,35 @@ fun CarCard(
 
                 Spacer(Modifier.width(12.dp))
 
-                Column(modifier = Modifier.weight(1f)) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        AutoSizeText(
-                            text = car.displayName,
-                            style = MaterialTheme.typography.titleMedium.copy(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 17.sp
-                            ),
-                            color = MaterialTheme.colorScheme.onSurface,
-                            modifier = Modifier.weight(1f, fill = false)
-                        )
+                AutoSizeText(
+                    text = car.displayName,
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 17.sp
+                    ),
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.weight(1f)
+                )
 
-                        Spacer(Modifier.width(8.dp))
+                Spacer(Modifier.width(8.dp))
 
-                        ActionButtons(
-                            onEdit = null,
-                            onDelete = onDeleteClick
-                        )
-                    }
+                ActionButtons(
+                    onEdit = onEditClick,
+                    onDelete = onDeleteClick
+                )
+            }
 
-                    if (specPills.isNotEmpty()) {
-                        Spacer(Modifier.height(8.dp))
-                        @OptIn(ExperimentalLayoutApi::class)
-                        FlowRow(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(6.dp),
-                            verticalArrangement = Arrangement.spacedBy(6.dp)
-                        ) {
-                            specPills.forEach { (icon, text) ->
-                                SpecChip(icon = icon, text = text)
-                            }
-                        }
+            if (specPills.isNotEmpty()) {
+                Spacer(Modifier.height(10.dp))
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    specPills.forEach { (icon, text) ->
+                        SpecChip(icon = icon, text = text)
                     }
                 }
             }

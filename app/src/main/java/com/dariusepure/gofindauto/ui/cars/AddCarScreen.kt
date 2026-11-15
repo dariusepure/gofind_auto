@@ -125,7 +125,7 @@ fun DiscoveryPhotoScanCard(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // --- HERO CARD FOR AI CAR PHOTO IDENTIFIER ---
+        // --- HERO CARD FOR CAR PHOTO IDENTIFIER ---
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(24.dp),
@@ -246,29 +246,21 @@ fun RecommendationCard(
         shape = RoundedCornerShape(20.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = "${car.make} ${car.model}",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                    
-                    val specs = mutableListOf<String>()
-                    car.year?.let { specs.add(it.roundToInt().toString()) }
-                    car.fuelType?.let { specs.add(it) }
-                    car.power?.let { specs.add("${it.roundToInt()} hp") }
-                    car.engineSize?.let { specs.add("${it.roundToInt()} cc") }
-                    
-                    if (specs.isNotEmpty()) {
-                        Text(
-                            text = specs.joinToString(" \u00B7 "),
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
-                }
-                
+            // Header Row: Make & Model + Save Button
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = "${car.make.orEmpty()} ${car.model.orEmpty()}".trim(),
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.weight(1f)
+                )
+
+                Spacer(Modifier.width(8.dp))
+
                 Button(
                     onClick = onSave,
                     contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
@@ -280,19 +272,131 @@ fun RecommendationCard(
                 }
             }
 
-            Spacer(Modifier.height(12.dp))
-            
-            Text(
-                text = stringResource(R.string.discovery_why_this_car),
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = car.recommendationReason ?: "",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant
-            )
+            Spacer(Modifier.height(10.dp))
+
+            // --- ALL SPECIFICATIONS DIRECTLY UNDER MAKE & MODEL ---
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(
+                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
+                        shape = RoundedCornerShape(14.dp)
+                    )
+                    .padding(12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // 1. Production Years
+                val yearsText = car.productionYears?.ifBlank { null }
+                    ?: car.year?.roundToInt()?.let { "$it" }
+                if (!yearsText.isNullOrBlank()) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Ani de producție: ",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = yearsText,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                // 2. Body Style (Caroserie)
+                if (!car.bodyType.isNullOrBlank()) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Caroserie: ",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = car.bodyType,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                // 3. Color (Culoare)
+                if (!car.color.isNullOrBlank()) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Culoare: ",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = car.color,
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                // 4. Tech Specs
+                val techSpecs = mutableListOf<String>()
+                car.fuelType?.takeIf { it.isNotBlank() }?.let { techSpecs.add(it) }
+                car.engineSize?.let { techSpecs.add("${it.roundToInt()} cc") }
+                car.power?.let { techSpecs.add("${it.roundToInt()} hp") }
+                if (techSpecs.isNotEmpty()) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = "Specificații: ",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = techSpecs.joinToString(" \u00B7 "),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+
+                // 5. Available Engines (Motoare disponibile)
+                if (!car.availableEngines.isNullOrBlank()) {
+                    Column {
+                        Text(
+                            text = "Motoare disponibile: ",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Spacer(Modifier.height(2.dp))
+                        Text(
+                            text = car.availableEngines,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    }
+                }
+            }
+
+            // Summary / Details
+            if (!car.recommendationReason.isNullOrBlank()) {
+                Spacer(Modifier.height(10.dp))
+                Text(
+                    text = stringResource(R.string.discovery_why_this_car),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = car.recommendationReason,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
         }
     }
 }
