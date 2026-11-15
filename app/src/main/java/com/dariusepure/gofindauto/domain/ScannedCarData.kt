@@ -4,6 +4,16 @@ import com.dariusepure.gofindauto.util.FlexibleDoubleSerializer
 import kotlinx.serialization.Serializable
 
 @Serializable
+data class EngineOption(
+    val name: String = "",
+    val fuelType: String = "",
+    @Serializable(with = FlexibleDoubleSerializer::class)
+    val engineSize: Double? = null,
+    @Serializable(with = FlexibleDoubleSerializer::class)
+    val power: Double? = null
+)
+
+@Serializable
 data class ScannedCarData(
     val make: String? = null,
     val model: String? = null,
@@ -18,6 +28,7 @@ data class ScannedCarData(
     @Serializable(with = FlexibleDoubleSerializer::class)
     val power: Double? = null,
     val powerUnit: String? = "hp",
+    val availableEngineOptions: List<EngineOption>? = null,
     val availableEngines: String? = null,
     val recommendationReason: String? = null
 )

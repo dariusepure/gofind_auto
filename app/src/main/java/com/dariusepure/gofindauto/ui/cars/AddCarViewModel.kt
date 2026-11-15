@@ -9,6 +9,7 @@ import com.dariusepure.gofindauto.data.ai.GeminiRepository
 import com.dariusepure.gofindauto.data.auth.AuthRepository
 import com.dariusepure.gofindauto.data.cars.CarRepository
 import com.dariusepure.gofindauto.domain.Car
+import com.dariusepure.gofindauto.domain.EngineOption
 import com.dariusepure.gofindauto.domain.ScannedCarData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -57,7 +58,9 @@ class AddCarViewModel @Inject constructor(
     fun scanCarPhoto(uri: Uri, mimeType: String = "image/jpeg") {
         viewModelScope.launch {
             _state.value = AddCarState.Pending
-            geminiRepository.scanDocument(uri, mimeType)
+            val isRomanian = context.resources.configuration.locales[0].language == "ro"
+            val language = if (isRomanian) "Romanian" else "English"
+            geminiRepository.scanDocument(uri, mimeType, language = language)
                 .onSuccess { scannedDataList ->
                     _state.value = AddCarState.Recommendations(scannedDataList)
                 }
@@ -115,26 +118,38 @@ class AddCarViewModel @Inject constructor(
         }
     }
 
-    fun saveRecommendation(data: ScannedCarData) {
+    fun saveRecommendation(
+        data: ScannedCarData,
+        selectedEngine: EngineOption? = null,
+        includeYears: Boolean = true,
+        includeBodyType: Boolean = true,
+        includeColor: Boolean = true,
+        includeTechSpecs: Boolean = true
+    ) {
         viewModelScope.launch {
             _state.value = AddCarState.Pending
             try {
+                val chosenFuelType = selectedEngine?.fuelType?.ifBlank { null } ?: data.fuelType ?: ""
+                val chosenEngineSize = selectedEngine?.engineSize?.roundToInt()?.toString() ?: data.engineSize?.roundToInt()?.toString() ?: ""
+                val chosenPower = selectedEngine?.power?.roundToInt() ?: data.power?.roundToInt() ?: 0
+
                 val extraInfo = buildString {
-                    if (!data.productionYears.isNullOrBlank()) append("Production Years: ${data.productionYears}. ")
-                    if (!data.bodyType.isNullOrBlank()) append("Body Type: ${data.bodyType}. ")
-                    if (!data.color.isNullOrBlank()) append("Color: ${data.color}. ")
-                    if (!data.availableEngines.isNullOrBlank()) append("Available Engines: ${data.availableEngines}. ")
-                    if (!data.recommendationReason.isNullOrBlank()) append(data.recommendationReason)
+                    if (selectedEngine != null && selectedEngine.name.isNotBlank()) {
+                        append("Engine Variant: ${selectedEngine.name}. ")
+                    }
+                    if (includeYears && !data.productionYears.isNullOrBlank()) append("Production Years: ${data.productionYears}. ")
+                    if (includeBodyType && !data.bodyType.isNullOrBlank()) append("Body Type: ${data.bodyType}. ")
+                    if (includeColor && !data.color.isNullOrBlank()) append("Color: ${data.color}. ")
                 }.trim()
 
                 val car = Car(
                     id = "",
                     make = data.make ?: "Unknown",
                     model = data.model ?: "Unknown",
-                    year = data.year?.roundToInt() ?: 0,
-                    fuelType = data.fuelType ?: "",
-                    engineSize = data.engineSize?.roundToInt()?.toString() ?: "",
-                    power = data.power?.roundToInt() ?: 0,
+                    year = if (includeYears) (data.year?.roundToInt() ?: 0) else 0,
+                    fuelType = if (includeTechSpecs) chosenFuelType else "",
+                    engineSize = if (includeTechSpecs) chosenEngineSize else "",
+                    power = if (includeTechSpecs) chosenPower else 0,
                     powerUnit = data.powerUnit ?: "hp",
                     recommendationReason = extraInfo,
                     updatedAt = Date()

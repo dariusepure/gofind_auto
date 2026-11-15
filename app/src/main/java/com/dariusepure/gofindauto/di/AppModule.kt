@@ -96,22 +96,29 @@ object AppModule {
             "gemini_persona_instruction" to "Act as GoFind Auto, a professional car mechanic. Use human-friendly terms only. Talk to the user as if you are their trusted advisor in a garage. If you see recent maintenance or relevant history, mention it naturally.",
             "gemini_formatting_instruction" to "STRICTLY PROHIBIT markdown bold (**text**) or italics (_text_). Respond using ONLY plain text. Use simple paragraphs or plain lists with dashes (-) if needed.",
             "gemini_scanning_prompt" to """
-                Extract technical details from this vehicle document.
-                Analyze the document and look for these fields:
-                - make, model, year (4 digits), fuelType, engineSize (cc), power (hp or kW).
+                Extract complete vehicle details from this car photo or document.
+                Analyze the image and identify:
+                - 'make': Brand/Make in Title Case (e.g., "Bmw", "Volkswagen", "Daewoo").
+                - 'model': Model name (e.g., "3 Series", "Golf", "Nexia").
+                - 'year': Estimated year of the specific car shown (4 digits).
+                - 'productionYears': Generation production years range (e.g., "1995 - 2002").
+                - 'bodyType': Body style (e.g., "Sedan", "Hatchback", "SUV", "Coupe", "Wagon", "Convertible").
+                - 'color': Detected car color in the photo (e.g., "Blue", "Black", "Silver", "White", "Red", "Gray", "Green", "Yellow", "Orange").
+                - 'fuelType': Primary fuel type (Petrol, Diesel, Electric, Hybrid, LPG).
+                - 'engineSize': Engine size in cc (e.g., 1498).
+                - 'power': Power in hp (e.g., 90).
+                - 'availableEngines': Common engine variants/options for this generation/model (e.g., "1.5i (75hp), 1.5 16V (90hp)").
+                - 'recommendationReason': Short summary of key facts about this model and generation.
                 
                 CRITICAL VALIDATION:
                 1. Verify Year: must be a realistic year (e.g., 1900-2026).
                 2. Verify Engine Size: must be in cubic centimeters (cc).
-                3. Brand (make) MUST be returned in Title Case (e.g., "Bmw", "Volkswagen").
+                3. Brand (make) MUST be returned in Title Case.
                 4. NUMERIC FIELDS MUST contain ONLY the raw number, NO units.
-                5. If a value is unreadable, illogical, or not found, return null for that field.
+                5. You MUST populate productionYears, bodyType, color, and availableEngines based on your automotive knowledge of the identified car model.
                 
                 Return ONLY a JSON ARRAY containing one object with these keys: 
-                make, model, year, fuelType, engineSize, power, powerUnit.
-                
-                Standard fuelType: Petrol, Diesel, Electric, Hybrid, LPG.
-                Standard powerUnit: 'hp'. If kW is found, convert to hp (kW * 1.36).
+                make, model, year, productionYears, bodyType, color, fuelType, engineSize, power, powerUnit, availableEngines, recommendationReason.
             """.trimIndent(),
             "gemini_recommendation_prompt" to """
                 Based on these user criteria: {{criteria}}
@@ -127,7 +134,7 @@ object AppModule {
                 Include technical details for better context.
                 
                 Return ONLY a JSON ARRAY of objects with these keys:
-                make, model, year, fuelType, engineSize, power, powerUnit, recommendationReason.
+                make, model, year, productionYears, bodyType, color, fuelType, engineSize, power, powerUnit, availableEngines, recommendationReason.
                 
                 CRITICAL: Return valid JSON only.
             """.trimIndent()

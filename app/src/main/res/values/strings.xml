@@ -109,6 +109,12 @@
     <string name="ai_scan_result_title">Identified Vehicle</string>
     <string name="ai_scan_save_to_garage">Save to Garage</string>
     <string name="car_add_title">Car Scanner</string>
+    <string name="select_engine_variant">Select your car\'s engine:</string>
+    <string name="select_specs_to_save">Select specifications to save:</string>
+    <string name="spec_label_years">Production Years</string>
+    <string name="spec_label_body">Body Style</string>
+    <string name="spec_label_color">Color</string>
+    <string name="spec_label_engine_specs">Engine Specs</string>
     <string name="discovery_subtitle">Upload a car photo to detect vehicle details.</string>
     <string name="discovery_usage_label">Main usage?</string>
     <string name="discovery_usage_city">City Commuting</string>

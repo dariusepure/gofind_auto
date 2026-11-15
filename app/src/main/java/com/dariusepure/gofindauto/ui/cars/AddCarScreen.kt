@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -32,7 +34,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlin.math.roundToInt
 import com.dariusepure.gofindauto.R
+import com.dariusepure.gofindauto.domain.EngineOption
 import com.dariusepure.gofindauto.domain.ScannedCarData
+import com.dariusepure.gofindauto.ui.common.CarTranslations
 import com.dariusepure.gofindauto.ui.common.ErrorState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -80,7 +84,16 @@ fun AddCarScreen(
                 is AddCarState.Recommendations -> {
                     RecommendationsList(
                         recommendations = s.cars,
-                        onSave = { viewModel.saveRecommendation(it) },
+                        onSave = { car, selectedEngine, incY, incB, incC, incT ->
+                            viewModel.saveRecommendation(
+                                data = car,
+                                selectedEngine = selectedEngine,
+                                includeYears = incY,
+                                includeBodyType = incB,
+                                includeColor = incC,
+                                includeTechSpecs = incT
+                            )
+                        },
                         onScanNew = { viewModel.resetState() }
                     )
                 }
@@ -125,7 +138,6 @@ fun DiscoveryPhotoScanCard(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // --- HERO CARD FOR CAR PHOTO IDENTIFIER ---
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(24.dp),
@@ -198,7 +210,14 @@ fun DiscoveryPhotoScanCard(
 @Composable
 fun RecommendationsList(
     recommendations: List<ScannedCarData>,
-    onSave: (ScannedCarData) -> Unit,
+    onSave: (
+        car: ScannedCarData,
+        selectedEngine: EngineOption?,
+        includeYears: Boolean,
+        includeBodyType: Boolean,
+        includeColor: Boolean,
+        includeTechSpecs: Boolean
+    ) -> Unit,
     onScanNew: () -> Unit
 ) {
     Column(
@@ -230,7 +249,12 @@ fun RecommendationsList(
             modifier = Modifier.weight(1f)
         ) {
             items(recommendations) { car ->
-                RecommendationCard(car = car, onSave = { onSave(car) })
+                RecommendationCard(
+                    car = car,
+                    onSave = { selectedEngine, incY, incB, incC, incT ->
+                        onSave(car, selectedEngine, incY, incB, incC, incT)
+                    }
+                )
             }
         }
     }
@@ -239,8 +263,44 @@ fun RecommendationsList(
 @Composable
 fun RecommendationCard(
     car: ScannedCarData,
-    onSave: () -> Unit
+    onSave: (
+        selectedEngine: EngineOption?,
+        includeYears: Boolean,
+        includeBodyType: Boolean,
+        includeColor: Boolean,
+        includeTechSpecs: Boolean
+    ) -> Unit
 ) {
+    val context = LocalContext.current
+
+    val engineOptions = remember(car) {
+        val list = mutableListOf<EngineOption>()
+        car.availableEngineOptions?.filter { it.name.isNotBlank() }?.let { list.addAll(it) }
+        if (list.isEmpty() && (!car.fuelType.isNullOrBlank() || car.engineSize != null)) {
+            val defaultName = listOfNotNull(
+                car.engineSize?.roundToInt()?.let { "%.1f".format(it / 1000.0) },
+                car.fuelType
+            ).joinToString(" ").ifBlank { "Standard Engine" }
+            list.add(
+                EngineOption(
+                    name = defaultName,
+                    fuelType = car.fuelType ?: "",
+                    engineSize = car.engineSize,
+                    power = car.power
+                )
+            )
+        }
+        list
+    }
+
+    var selectedEngineIndex by remember(car) { mutableIntStateOf(0) }
+    val currentSelectedEngine = engineOptions.getOrNull(selectedEngineIndex)
+
+    var includeYears by remember { mutableStateOf(true) }
+    var includeBodyType by remember { mutableStateOf(true) }
+    var includeColor by remember { mutableStateOf(true) }
+    var includeTechSpecs by remember { mutableStateOf(true) }
+
     ElevatedCard(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(20.dp)
@@ -262,7 +322,15 @@ fun RecommendationCard(
                 Spacer(Modifier.width(8.dp))
 
                 Button(
-                    onClick = onSave,
+                    onClick = {
+                        onSave(
+                            currentSelectedEngine,
+                            includeYears,
+                            includeBodyType,
+                            includeColor,
+                            includeTechSpecs
+                        )
+                    },
                     contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
                     shape = RoundedCornerShape(12.dp)
                 ) {
@@ -272,26 +340,103 @@ fun RecommendationCard(
                 }
             }
 
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(12.dp))
 
-            // --- ALL SPECIFICATIONS DIRECTLY UNDER MAKE & MODEL ---
+            // --- 1. ENGINE VARIANT SELECTION (RADIO BUTTONS) ---
+            if (engineOptions.isNotEmpty()) {
+                Text(
+                    text = stringResource(R.string.select_engine_variant),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(Modifier.height(6.dp))
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f))
+                        .padding(vertical = 4.dp),
+                    verticalArrangement = Arrangement.spacedBy(2.dp)
+                ) {
+                    engineOptions.forEachIndexed { index, option ->
+                        val isSelected = index == selectedEngineIndex
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable { selectedEngineIndex = index }
+                                .padding(horizontal = 8.dp, vertical = 4.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            RadioButton(
+                                selected = isSelected,
+                                onClick = { selectedEngineIndex = index }
+                            )
+                            Spacer(Modifier.width(4.dp))
+                            Column(modifier = Modifier.weight(1f)) {
+                                Text(
+                                    text = option.name,
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                                    color = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+                                )
+                                val fuelLabel = CarTranslations.getFuelTypeLabel(context, option.fuelType)
+                                val specsInfo = buildList {
+                                    if (fuelLabel.isNotBlank()) add(fuelLabel)
+                                    option.engineSize?.let { add("${it.roundToInt()} cc") }
+                                    option.power?.let { add("${it.roundToInt()} hp") }
+                                }.joinToString(" \u00B7 ")
+
+                                if (specsInfo.isNotBlank()) {
+                                    Text(
+                                        text = specsInfo,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Spacer(Modifier.height(12.dp))
+            }
+
+            // --- 2. OTHER SPECIFICATIONS TO INCLUDE ---
+            Text(
+                text = stringResource(R.string.select_specs_to_save),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
+            )
+
+            Spacer(Modifier.height(6.dp))
+
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.7f),
-                        shape = RoundedCornerShape(14.dp)
-                    )
-                    .padding(12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(6.dp)
             ) {
-                // 1. Production Years
+                // Production Years
                 val yearsText = car.productionYears?.ifBlank { null }
                     ?: car.year?.roundToInt()?.let { "$it" }
                 if (!yearsText.isNullOrBlank()) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f))
+                            .padding(end = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = includeYears,
+                            onCheckedChange = { includeYears = it }
+                        )
                         Text(
-                            text = "Ani de producție: ",
+                            text = "${stringResource(R.string.spec_label_years)}: ",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
@@ -305,17 +450,29 @@ fun RecommendationCard(
                     }
                 }
 
-                // 2. Body Style (Caroserie)
+                // Body Style
                 if (!car.bodyType.isNullOrBlank()) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    val bodyLabel = CarTranslations.getVehicleTypeLabel(context, car.bodyType)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f))
+                            .padding(end = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = includeBodyType,
+                            onCheckedChange = { includeBodyType = it }
+                        )
                         Text(
-                            text = "Caroserie: ",
+                            text = "${stringResource(R.string.spec_label_body)}: ",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
                         )
                         Text(
-                            text = car.bodyType,
+                            text = bodyLabel,
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSurface
@@ -323,17 +480,29 @@ fun RecommendationCard(
                     }
                 }
 
-                // 3. Color (Culoare)
+                // Color
                 if (!car.color.isNullOrBlank()) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    val colorLabel = CarTranslations.getColorLabel(context, car.color)
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f))
+                            .padding(end = 12.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Checkbox(
+                            checked = includeColor,
+                            onCheckedChange = { includeColor = it }
+                        )
                         Text(
-                            text = "Culoare: ",
+                            text = "${stringResource(R.string.spec_label_color)}: ",
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.primary
                         )
                         Text(
-                            text = car.color,
+                            text = colorLabel,
                             style = MaterialTheme.typography.bodyMedium,
                             fontWeight = FontWeight.Medium,
                             color = MaterialTheme.colorScheme.onSurface
@@ -341,61 +510,43 @@ fun RecommendationCard(
                     }
                 }
 
-                // 4. Tech Specs
-                val techSpecs = mutableListOf<String>()
-                car.fuelType?.takeIf { it.isNotBlank() }?.let { techSpecs.add(it) }
-                car.engineSize?.let { techSpecs.add("${it.roundToInt()} cc") }
-                car.power?.let { techSpecs.add("${it.roundToInt()} hp") }
-                if (techSpecs.isNotEmpty()) {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = "Specificații: ",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Text(
-                            text = techSpecs.joinToString(" \u00B7 "),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
+                // Tech Specs (from currentSelectedEngine)
+                if (currentSelectedEngine != null) {
+                    val fuelLabel = CarTranslations.getFuelTypeLabel(context, currentSelectedEngine.fuelType)
+                    val techSpecs = buildList {
+                        if (fuelLabel.isNotBlank()) add(fuelLabel)
+                        currentSelectedEngine.engineSize?.let { add("${it.roundToInt()} cc") }
+                        currentSelectedEngine.power?.let { add("${it.roundToInt()} hp") }
+                    }.joinToString(" \u00B7 ")
+
+                    if (techSpecs.isNotBlank()) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .clip(RoundedCornerShape(12.dp))
+                                .background(MaterialTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.5f))
+                                .padding(end = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Checkbox(
+                                checked = includeTechSpecs,
+                                onCheckedChange = { includeTechSpecs = it }
+                            )
+                            Text(
+                                text = "${stringResource(R.string.spec_label_engine_specs)}: ",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = techSpecs,
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onSurface
+                            )
+                        }
                     }
                 }
-
-                // 5. Available Engines (Motoare disponibile)
-                if (!car.availableEngines.isNullOrBlank()) {
-                    Column {
-                        Text(
-                            text = "Motoare disponibile: ",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(Modifier.height(2.dp))
-                        Text(
-                            text = car.availableEngines,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                    }
-                }
-            }
-
-            // Summary / Details
-            if (!car.recommendationReason.isNullOrBlank()) {
-                Spacer(Modifier.height(10.dp))
-                Text(
-                    text = stringResource(R.string.discovery_why_this_car),
-                    style = MaterialTheme.typography.labelLarge,
-                    color = MaterialTheme.colorScheme.primary,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = car.recommendationReason,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
             }
         }
     }

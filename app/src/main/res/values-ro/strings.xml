@@ -109,6 +109,12 @@
     <string name="ai_scan_result_title">Vehicul Identificat</string>
     <string name="ai_scan_save_to_garage">Salvează în Garaj</string>
     <string name="car_add_title">Scaner Mașini</string>
+    <string name="select_engine_variant">Selectează motorizarea mașinii tale:</string>
+    <string name="select_specs_to_save">Alege specificațiile de salvat:</string>
+    <string name="spec_label_years">Ani de producție</string>
+    <string name="spec_label_body">Caroserie</string>
+    <string name="spec_label_color">Culoare</string>
+    <string name="spec_label_engine_specs">Specificații motor</string>
     <string name="discovery_subtitle">Încarcă o poză pentru a detecta detaliile vehiculului.</string>
     <string name="discovery_usage_label">Utilizare principală?</string>
     <string name="discovery_usage_city">Navetă în oraș</string>
