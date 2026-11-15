@@ -108,8 +108,8 @@
     <string name="ai_scan_analyzing">AI-ul identifică poza mașinii…</string>
     <string name="ai_scan_result_title">Mașină Identificată de AI</string>
     <string name="ai_scan_save_to_garage">Salvează în Garaj</string>
-    <string name="car_add_title">Ghicitor AI Mașini</string>
-    <string name="discovery_subtitle">Încarcă o poză sau alege criterii pentru ca AI-ul să ghicească și potrivească mașini.</string>
+    <string name="car_add_title">Scaner AI</string>
+    <string name="discovery_subtitle">Încarcă o poză pentru ca AI-ul să identifice mașina.</string>
     <string name="discovery_usage_label">Utilizare principală?</string>
     <string name="discovery_usage_city">Navetă în oraș</string>
     <string name="discovery_usage_highway">Drumuri lungi (Autostradă)</string>

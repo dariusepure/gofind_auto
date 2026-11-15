@@ -108,8 +108,8 @@
     <string name="ai_scan_analyzing">AI is identifying the car photo...</string>
     <string name="ai_scan_result_title">AI Identified Car</string>
     <string name="ai_scan_save_to_garage">Save to Garage</string>
-    <string name="car_add_title">AI Car Guesser</string>
-    <string name="discovery_subtitle">Upload a photo of a car or select criteria to let AI guess and match cars.</string>
+    <string name="car_add_title">AI Scanner</string>
+    <string name="discovery_subtitle">Upload a photo of a car to let AI identify it.</string>
     <string name="discovery_usage_label">Main usage?</string>
     <string name="discovery_usage_city">City Commuting</string>
     <string name="discovery_usage_highway">Long Highway Trips</string>
