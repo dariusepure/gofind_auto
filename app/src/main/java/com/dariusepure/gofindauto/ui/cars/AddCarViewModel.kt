@@ -45,7 +45,9 @@ class AddCarViewModel @Inject constructor(
             try {
                 val car = carRepository.getCar(carId)
                 if (car != null) {
-                    _state.value = AddCarState.Idle
+                    _state.value = AddCarState.EditMode(car)
+                } else {
+                    _state.value = AddCarState.Error(context.getString(R.string.error_car_not_found))
                 }
             } catch (e: Exception) {
                 _state.value = AddCarState.Error(e.localizedMessage ?: context.getString(R.string.error_failed_to_load_car))
@@ -66,54 +68,6 @@ class AddCarViewModel @Inject constructor(
                 }
                 .onFailure { e ->
                     _state.value = AddCarState.Error(e.localizedMessage ?: "Failed to identify car from photo")
-                }
-        }
-    }
-
-    fun getRecommendations(
-        brand: String = "",
-        model: String = "",
-        yearFrom: String = "",
-        yearTo: String = "",
-        engineFrom: String = "",
-        engineTo: String = "",
-        powerFrom: String = "",
-        powerTo: String = "",
-        fuelType: String = ""
-    ) {
-        viewModelScope.launch {
-            _state.value = AddCarState.Pending
-            val criteria = buildString {
-                if (brand.isNotBlank()) append("Target Brand: $brand. ")
-                if (model.isNotBlank()) append("Target Model: $model. ")
-                if (fuelType.isNotBlank()) append("Fuel Type: $fuelType. ")
-                
-                when {
-                    yearFrom.isNotBlank() && yearTo.isNotBlank() -> append("Year Range: $yearFrom to $yearTo. ")
-                    yearFrom.isNotBlank() -> append("Produced from year $yearFrom onwards. ")
-                    yearTo.isNotBlank() -> append("Produced up to year $yearTo. ")
-                }
-
-                when {
-                    engineFrom.isNotBlank() && engineTo.isNotBlank() -> append("Engine Size Range: $engineFrom cc to $engineTo cc. ")
-                    engineFrom.isNotBlank() -> append("Engine Size: minimum $engineFrom cc. ")
-                    engineTo.isNotBlank() -> append("Engine Size: maximum $engineTo cc. ")
-                }
-
-                when {
-                    powerFrom.isNotBlank() && powerTo.isNotBlank() -> append("Power Range: $powerFrom hp to $powerTo hp. ")
-                    powerFrom.isNotBlank() -> append("Power: minimum $powerFrom hp. ")
-                    powerTo.isNotBlank() -> append("Power: maximum $powerTo hp. ")
-                }
-                
-                if (this.isEmpty()) append("Suggest 3-5 reliable and popular cars for general use.")
-            }
-            geminiRepository.getCarRecommendations(criteria)
-                .onSuccess { recommendations ->
-                    _state.value = AddCarState.Recommendations(recommendations)
-                }
-                .onFailure { e ->
-                    _state.value = AddCarState.Error(e.localizedMessage ?: "Failed to get recommendations from AI")
                 }
         }
     }
@@ -143,7 +97,7 @@ class AddCarViewModel @Inject constructor(
                 }.trim()
 
                 val car = Car(
-                    id = "",
+                    id = currentCarId ?: "",
                     make = data.make ?: "Unknown",
                     model = data.model ?: "Unknown",
                     year = if (includeYears) (data.year?.roundToInt() ?: 0) else 0,
@@ -163,11 +117,13 @@ class AddCarViewModel @Inject constructor(
         }
     }
 
-    fun onAddOrUpdateCar(
+    fun saveCarForm(
         make: String,
         model: String,
         year: String,
-        maintenanceGoal: String
+        fuelType: String,
+        engineSize: String,
+        power: String
     ) {
         viewModelScope.launch {
             _state.value = AddCarState.Pending
@@ -177,7 +133,9 @@ class AddCarViewModel @Inject constructor(
                     make = make.trim(),
                     model = model.trim(),
                     year = year.toIntOrNull() ?: 0,
-                    maintenanceGoal = maintenanceGoal,
+                    fuelType = fuelType.trim(),
+                    engineSize = engineSize.trim(),
+                    power = power.toIntOrNull() ?: 0,
                     updatedAt = Date()
                 )
                 carRepository.createCar(car)

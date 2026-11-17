@@ -24,3 +24,9 @@ data class Car(
 
 val Car.displayName: String
     get() = "$make $model".trim().ifBlank { "Unnamed car" }
+
+val Car.bodyType: String
+    get() {
+        val regex = Regex("""(?:Body Type|Caroserie):\s*([^.\n]+)""", RegexOption.IGNORE_CASE)
+        return regex.find(recommendationReason)?.groupValues?.get(1)?.trim() ?: ""
+    }

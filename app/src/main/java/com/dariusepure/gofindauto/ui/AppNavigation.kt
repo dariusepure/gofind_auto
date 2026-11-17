@@ -6,9 +6,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import com.dariusepure.gofindauto.ui.auth.SignInScreen
@@ -35,7 +37,9 @@ sealed class Screen(val route: String) {
     data object CarDetails : Screen("cardetails/{carId}") {
         fun createRoute(carId: String) = "cardetails/$carId"
     }
-    data object AddCar : Screen("addcar")
+    data object AddCar : Screen("addcar?carId={carId}") {
+        fun createRoute(carId: String? = null) = if (carId != null) "addcar?carId=$carId" else "addcar"
+    }
     data object Diagnosis : Screen("diagnosis/{carId}") {
         fun createRoute(carId: String) = "diagnosis/$carId"
     }
@@ -121,6 +125,9 @@ fun AppNavigation(
                 onCarClick = { carId ->
                     navController.navigate(Screen.CarDetails.createRoute(carId))
                 },
+                onEditCarClick = { carId ->
+                    navController.navigate(Screen.AddCar.createRoute(carId))
+                },
                 onLogout = {
                     mainViewModel.signOut()
                     navController.navigate(Screen.SignIn.route) {
@@ -134,13 +141,25 @@ fun AppNavigation(
             CarDetailsScreen(
                 carId = carId,
                 onBack = { navController.popBackStack() },
+                onEditClick = { id ->
+                    navController.navigate(Screen.AddCar.createRoute(id))
+                },
                 onDiagnosisClick = {
                     navController.navigate(Screen.Diagnosis.createRoute(carId))
                 }
             )
         }
-        composable(Screen.AddCar.route) {
+        composable(
+            route = "addcar?carId={carId}",
+            arguments = listOf(navArgument("carId") {
+                type = NavType.StringType
+                nullable = true
+                defaultValue = null
+            })
+        ) { backStackEntry ->
+            val carId = backStackEntry.arguments?.getString("carId")
             AddCarScreen(
+                carId = carId,
                 onCarSaved = {
                     navController.popBackStack()
                 },

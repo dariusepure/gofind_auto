@@ -13,18 +13,12 @@ object CarFormatters {
     private val timeFormat = SimpleDateFormat("HH:mm", Locale.getDefault())
 
     fun formatPower(context: Context, car: Car): String {
-        val hpValue: Int
-        val kwValue: Int
-        
-        if (car.powerUnit.lowercase() == "kw") {
-            kwValue = car.power
-            hpValue = (car.power * 1.35962).roundToInt()
+        val hpValue = if (car.powerUnit.lowercase() == "kw") {
+            (car.power * 1.35962).roundToInt()
         } else {
-            hpValue = car.power
-            kwValue = (car.power / 1.35962).roundToInt()
+            car.power
         }
-        
-        return context.getString(R.string.formatter_power_dual, hpValue, kwValue)
+        return context.getString(R.string.formatter_power_hp, hpValue)
     }
 
     fun getCarSummary(context: Context, car: Car): String {

@@ -29,7 +29,6 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.LocalGasStation
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Speed
-import androidx.compose.material.icons.filled.Tune
 import androidx.compose.material.icons.outlined.DirectionsCar
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -51,6 +50,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.dariusepure.gofindauto.R
 import com.dariusepure.gofindauto.domain.Car
+import com.dariusepure.gofindauto.domain.bodyType
 import com.dariusepure.gofindauto.domain.displayName
 import com.dariusepure.gofindauto.ui.common.ActionButtons
 import com.dariusepure.gofindauto.ui.common.AutoSizeText
@@ -79,14 +79,15 @@ fun CarCard(
         if (car.year > 0) {
             list.add(Pair(Icons.Default.CalendarToday, car.year.toString()))
         }
+        val body = car.bodyType
+        if (body.isNotBlank()) {
+            list.add(Pair(Icons.Outlined.DirectionsCar, CarTranslations.getVehicleTypeLabel(context, body)))
+        }
         if (car.fuelType.isNotBlank()) {
             list.add(Pair(Icons.Default.LocalGasStation, CarTranslations.getFuelTypeLabel(context, car.fuelType)))
         }
         if (car.power > 0) {
             list.add(Pair(Icons.Default.Speed, CarFormatters.formatPower(context, car)))
-        }
-        if (car.engineSize.isNotBlank()) {
-            list.add(Pair(Icons.Default.Tune, "${car.engineSize} cc"))
         }
         list
     }

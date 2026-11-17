@@ -3,11 +3,11 @@ package com.dariusepure.gofindauto.ui
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.DirectionsCar
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.DirectionsCar
+import androidx.compose.material.icons.outlined.PhotoCamera
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -41,8 +41,8 @@ sealed class MainTab(
     data object Discover : MainTab(
         route = "discover",
         labelRes = R.string.car_add_title,
-        selectedIcon = Icons.Filled.AutoAwesome,
-        unselectedIcon = Icons.Outlined.AutoAwesome
+        selectedIcon = Icons.Filled.PhotoCamera,
+        unselectedIcon = Icons.Outlined.PhotoCamera
     )
     data object Settings : MainTab(
         route = "settings_tab",
@@ -55,6 +55,7 @@ sealed class MainTab(
 @Composable
 fun MainScreen(
     onCarClick: (String) -> Unit,
+    onEditCarClick: (String) -> Unit,
     onLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -108,8 +109,8 @@ fun MainScreen(
                 CarListScreen(
                     onCarClick = onCarClick,
                     onAddCarClick = { navController.navigate(MainTab.Discover.route) },
-                    onEditCarClick = { }, // Handle edit if needed
-                    onLogout = onLogout // Still passed through for viewmodel call in AppNavigation or local
+                    onEditCarClick = onEditCarClick,
+                    onLogout = onLogout
                 )
             }
             composable(MainTab.Discover.route) {

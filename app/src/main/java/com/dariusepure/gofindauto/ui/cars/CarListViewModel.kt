@@ -6,6 +6,7 @@ import com.dariusepure.gofindauto.data.auth.AuthRepository
 import androidx.annotation.StringRes
 import com.dariusepure.gofindauto.R
 import com.dariusepure.gofindauto.data.cars.CarRepository
+import com.dariusepure.gofindauto.domain.Car
 import com.dariusepure.gofindauto.domain.displayName
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -84,6 +85,16 @@ class CarListViewModel @Inject constructor(
         _searchQuery.value = query
     }
 
+    fun onUpdateCar(car: Car) {
+        viewModelScope.launch {
+            try {
+                carRepository.createCar(car)
+            } catch (e: Exception) {
+                // Log or handle error if needed
+            }
+        }
+    }
+
     fun onDeleteCar(carId: String) {
         viewModelScope.launch {
             try {
@@ -104,4 +115,3 @@ class CarListViewModel @Inject constructor(
         }
     }
 }
-

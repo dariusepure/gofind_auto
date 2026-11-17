@@ -11,12 +11,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AddPhotoAlternate
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.PhotoCamera
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -27,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -34,6 +36,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import kotlin.math.roundToInt
 import com.dariusepure.gofindauto.R
+import com.dariusepure.gofindauto.domain.Car
 import com.dariusepure.gofindauto.domain.EngineOption
 import com.dariusepure.gofindauto.domain.ScannedCarData
 import com.dariusepure.gofindauto.ui.common.CarTranslations
@@ -60,6 +63,12 @@ fun AddCarScreen(
         }
     }
 
+    LaunchedEffect(carId) {
+        if (!carId.isNullOrBlank()) {
+            viewModel.loadCar(carId)
+        }
+    }
+
     LaunchedEffect(Unit) {
         viewModel.navigationEvent.collect {
             haptic.performHapticFeedback(HapticFeedbackType.LongPress)
@@ -67,10 +76,15 @@ fun AddCarScreen(
         }
     }
 
+    val screenTitle = when {
+        !carId.isNullOrBlank() -> stringResource(R.string.common_edit)
+        else -> stringResource(R.string.car_add_title)
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.car_add_title)) },
+                title = { Text(screenTitle, fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_back))
@@ -81,6 +95,14 @@ fun AddCarScreen(
     ) { padding ->
         Box(modifier = Modifier.fillMaxSize().padding(padding)) {
             when (val s = state) {
+                is AddCarState.EditMode -> {
+                    EditCarForm(
+                        initialCar = s.car,
+                        onSave = { make, model, year, fuelType, engineSize, power ->
+                            viewModel.saveCarForm(make, model, year, fuelType, engineSize, power)
+                        }
+                    )
+                }
                 is AddCarState.Recommendations -> {
                     RecommendationsList(
                         recommendations = s.cars,
@@ -126,6 +148,154 @@ fun AddCarScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun EditCarForm(
+    initialCar: Car,
+    onSave: (
+        make: String,
+        model: String,
+        year: String,
+        fuelType: String,
+        engineSize: String,
+        power: String
+    ) -> Unit
+) {
+    val context = LocalContext.current
+    var make by remember { mutableStateOf(initialCar.make) }
+    var model by remember { mutableStateOf(initialCar.model) }
+    var year by remember { mutableStateOf(if (initialCar.year > 0) initialCar.year.toString() else "") }
+    var fuelType by remember { mutableStateOf(initialCar.fuelType) }
+    var engineSize by remember { mutableStateOf(initialCar.engineSize) }
+    var power by remember { mutableStateOf(if (initialCar.power > 0) initialCar.power.toString() else "") }
+
+    val fuelTypes = listOf("Petrol", "Diesel", "Electric", "Hybrid", "LPG", "CNG", "Hydrogen")
+    var fuelDropdownExpanded by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Section 1: Main Info
+        Text(
+            text = stringResource(R.string.section_main_info),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold
+        )
+
+        OutlinedTextField(
+            value = make,
+            onValueChange = { make = it },
+            label = { Text(stringResource(R.string.car_make_label)) },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp)
+        )
+
+        OutlinedTextField(
+            value = model,
+            onValueChange = { model = it },
+            label = { Text(stringResource(R.string.car_model_label)) },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp)
+        )
+
+        OutlinedTextField(
+            value = year,
+            onValueChange = { year = it.filter { char -> char.isDigit() }.take(4) },
+            label = { Text(stringResource(R.string.car_year_label)) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp)
+        )
+
+        HorizontalDivider(modifier = Modifier.padding(vertical = 4.dp))
+
+        // Section 2: Engine & Specs
+        Text(
+            text = stringResource(R.string.section_engine_fuel),
+            style = MaterialTheme.typography.titleMedium,
+            color = MaterialTheme.colorScheme.primary,
+            fontWeight = FontWeight.Bold
+        )
+
+        // Fuel Type Dropdown
+        ExposedDropdownMenuBox(
+            expanded = fuelDropdownExpanded,
+            onExpandedChange = { fuelDropdownExpanded = !fuelDropdownExpanded }
+        ) {
+            OutlinedTextField(
+                value = CarTranslations.getFuelTypeLabel(context, fuelType),
+                onValueChange = {},
+                readOnly = true,
+                label = { Text(stringResource(R.string.discovery_label_fuel)) },
+                trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = fuelDropdownExpanded) },
+                modifier = Modifier.fillMaxWidth().menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                shape = RoundedCornerShape(12.dp)
+            )
+            ExposedDropdownMenu(
+                expanded = fuelDropdownExpanded,
+                onDismissRequest = { fuelDropdownExpanded = false }
+            ) {
+                fuelTypes.forEach { type ->
+                    DropdownMenuItem(
+                        text = { Text(CarTranslations.getFuelTypeLabel(context, type)) },
+                        onClick = {
+                            fuelType = type
+                            fuelDropdownExpanded = false
+                        }
+                    )
+                }
+            }
+        }
+
+        OutlinedTextField(
+            value = engineSize,
+            onValueChange = { engineSize = it.filter { char -> char.isDigit() } },
+            label = { Text(stringResource(R.string.car_engine_size_label)) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp)
+        )
+
+        OutlinedTextField(
+            value = power,
+            onValueChange = { power = it.filter { char -> char.isDigit() } },
+            label = { Text(stringResource(R.string.car_power_label)) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(12.dp)
+        )
+
+        Spacer(Modifier.height(12.dp))
+
+        Button(
+            onClick = {
+                onSave(make, model, year, fuelType, engineSize, power)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(52.dp),
+            shape = RoundedCornerShape(14.dp),
+            enabled = make.isNotBlank() && model.isNotBlank()
+        ) {
+            Icon(Icons.Default.Check, contentDescription = null)
+            Spacer(Modifier.width(8.dp))
+            Text(stringResource(R.string.common_save), fontWeight = FontWeight.Bold, fontSize = 16.sp)
+        }
+
+        Spacer(Modifier.height(24.dp))
+    }
+}
+
 @Composable
 fun DiscoveryPhotoScanCard(
     onUploadPhoto: () -> Unit
@@ -138,6 +308,7 @@ fun DiscoveryPhotoScanCard(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        // --- HERO CARD FOR CAR PHOTO IDENTIFIER ---
         Card(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(24.dp),
@@ -158,7 +329,7 @@ fun DiscoveryPhotoScanCard(
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
-                        imageVector = Icons.Default.AutoAwesome,
+                        imageVector = Icons.Default.PhotoCamera,
                         contentDescription = null,
                         modifier = Modifier.size(40.dp),
                         tint = MaterialTheme.colorScheme.primary

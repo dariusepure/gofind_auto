@@ -100,7 +100,7 @@
     <string name="car_list_no_results_subtitle">Încearcă un alt termen de căutare.</string>
     <string name="car_list_loading">Se încarcă mașinile…</string>
 
-    <!-- Scan & Discovery -->
+    <!-- Scan & Form Labels -->
     <string name="ai_scan_hero_title">Identificator Mașină</string>
     <string name="ai_scan_hero_subtitle">Importă sau fă o poză oricărei mașini pentru a identifica marca, modelul, anul și specificațiile!</string>
     <string name="ai_scan_upload_button">Încarcă Poză Mașină</string>
@@ -115,7 +115,14 @@
     <string name="spec_label_body">Caroserie</string>
     <string name="spec_label_color">Culoare</string>
     <string name="spec_label_engine_specs">Specificații motor</string>
+    <string name="section_main_info">Informații Principale</string>
+    <string name="section_engine_fuel">Motorizare &amp; Combustibil</string>
+    <string name="car_year_label">An Producție</string>
+    <string name="car_engine_size_label">Capacitate Cilindrică (cmc)</string>
+    <string name="car_power_label">Putere (cp)</string>
+    <string name="add_edit_manual_form">Adaugă / Editează Manual</string>
     <string name="discovery_subtitle">Încarcă o poză pentru a detecta detaliile vehiculului.</string>
+
     <string name="discovery_usage_label">Utilizare principală?</string>
     <string name="discovery_usage_city">Navetă în oraș</string>
     <string name="discovery_usage_highway">Drumuri lungi (Autostradă)</string>

@@ -39,6 +39,7 @@ import com.dariusepure.gofindauto.ui.common.*
 fun CarDetailsScreen(
     carId: String,
     onBack: () -> Unit,
+    onEditClick: (String) -> Unit,
     onDiagnosisClick: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: CarDetailsViewModel = hiltViewModel()
@@ -68,6 +69,15 @@ fun CarDetailsScreen(
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_back))
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { onEditClick(carId) }) {
+                        Icon(
+                            imageVector = Icons.Default.Edit,
+                            contentDescription = stringResource(R.string.common_edit),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
                 }
             )
@@ -170,58 +180,6 @@ fun CarDetailsScreen(
                                             Text(car.maintenanceGoal, style = MaterialTheme.typography.labelMedium)
                                         }
                                     }
-                                }
-                            }
-                        }
-                    }
-
-                    // --- BENTO GRID FOR AI ADVISOR ---
-                    item {
-                        BentoCard(
-                            onClick = onDiagnosisClick,
-                            modifier = Modifier.fillMaxWidth().height(160.dp),
-                            containerColor = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.4f),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            Icon(Icons.Default.AutoAwesome, null, modifier = Modifier.size(44.dp), tint = carAccentColor)
-                            Spacer(Modifier.weight(1f))
-                            Text(
-                                text = stringResource(R.string.car_diagnosis_title),
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.onSurface
-                            )
-                            Spacer(Modifier.height(2.dp))
-                            Text(
-                                text = stringResource(R.string.car_diagnosis_subtitle),
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-
-                    if (car.recommendationReason.isNotBlank()) {
-                        item {
-                            Card(
-                                modifier = Modifier.fillMaxWidth(),
-                                shape = RoundedCornerShape(18.dp),
-                                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
-                                border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.35f))
-                            ) {
-                                Column(modifier = Modifier.padding(16.dp)) {
-                                    Text(
-                                        text = stringResource(R.string.discovery_why_this_car),
-                                        style = MaterialTheme.typography.titleSmall,
-                                        color = carAccentColor,
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                    Spacer(Modifier.height(6.dp))
-                                    Text(
-                                        text = car.recommendationReason,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurface
-                                    )
                                 }
                             }
                         }

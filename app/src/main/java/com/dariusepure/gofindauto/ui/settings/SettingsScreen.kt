@@ -135,16 +135,6 @@ fun SettingsScreen(
             }
 
             Spacer(Modifier.height(32.dp))
-
-            Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-                Text(
-                    text = stringResource(R.string.common_powered_by),
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.5f)
-                )
-            }
-            
-            Spacer(Modifier.height(16.dp))
         }
     }
 
@@ -211,7 +201,7 @@ fun ProfileHeader(email: String) {
         Spacer(Modifier.width(16.dp))
         Column {
             Text(
-                text = stringResource(R.string.auth_signin_title), // Or "User Account"
+                text = stringResource(R.string.auth_signin_title),
                 style = MaterialTheme.typography.titleMedium,
                 fontWeight = FontWeight.Bold
             )
