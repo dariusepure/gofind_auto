@@ -100,6 +100,11 @@
     <string name="car_list_no_results_subtitle">Try a different search term.</string>
     <string name="car_list_loading">Loading your cars</string>
 
+    <!-- Technical Sheet & Sections -->
+    <string name="car_technical_sheet">Technical Sheet</string>
+    <string name="car_identity_section">Vehicle Identity</string>
+    <string name="car_engine_transmission_section">Engine &amp; Performance</string>
+
     <!-- Scan & Form Labels -->
     <string name="ai_scan_hero_title">Car Identifier</string>
     <string name="ai_scan_hero_subtitle">Import or take a photo of any car to instantly detect the make, model, year, and technical specs!</string>

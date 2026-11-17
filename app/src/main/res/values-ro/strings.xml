@@ -100,6 +100,11 @@
     <string name="car_list_no_results_subtitle">Încearcă un alt termen de căutare.</string>
     <string name="car_list_loading">Se încarcă mașinile…</string>
 
+    <!-- Technical Sheet & Sections -->
+    <string name="car_technical_sheet">Fișă Tehnică</string>
+    <string name="car_identity_section">Identitate Vehicul</string>
+    <string name="car_engine_transmission_section">Motorizare &amp; Performanță</string>
+
     <!-- Scan & Form Labels -->
     <string name="ai_scan_hero_title">Identificator Mașină</string>
     <string name="ai_scan_hero_subtitle">Importă sau fă o poză oricărei mașini pentru a identifica marca, modelul, anul și specificațiile!</string>

@@ -13,13 +13,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.DirectionsCar
-import androidx.compose.material.icons.outlined.Lightbulb
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -65,7 +65,7 @@ fun CarDetailsScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.car_details_title)) },
+                title = { Text(stringResource(R.string.car_technical_sheet), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.common_back))
@@ -91,6 +91,27 @@ fun CarDetailsScreen(
                 val carAccentColor = MaterialTheme.colorScheme.primary
                 val logoRes = remember(car.make) { CarFormatters.getBrandLogoResource(car.make) }
 
+                val makeLabel = stringResource(R.string.car_make_label)
+                val modelLabel = stringResource(R.string.car_model_label)
+                val yearLabel = stringResource(R.string.car_year_label)
+                val bodyLabel = stringResource(R.string.spec_label_body)
+                val fuelLabel = stringResource(R.string.discovery_label_fuel)
+                val engineSizeLabel = stringResource(R.string.car_engine_size_label)
+                val powerLabel = stringResource(R.string.car_power_label)
+
+                val identityItems = listOfNotNull(
+                    if (car.make.isNotBlank()) SpecItem(makeLabel, car.make, Icons.Default.Factory) else null,
+                    if (car.model.isNotBlank()) SpecItem(modelLabel, car.model, Icons.Default.Category) else null,
+                    if (car.year > 0) SpecItem(yearLabel, car.year.toString(), Icons.Default.CalendarMonth) else null,
+                    if (car.bodyType.isNotBlank()) SpecItem(bodyLabel, CarTranslations.getVehicleTypeLabel(context, car.bodyType), Icons.Outlined.DirectionsCar) else null
+                )
+
+                val engineItems = listOfNotNull(
+                    if (car.fuelType.isNotBlank()) SpecItem(fuelLabel, CarTranslations.getFuelTypeLabel(context, car.fuelType), Icons.Default.LocalGasStation) else null,
+                    if (car.engineSize.isNotBlank()) SpecItem(engineSizeLabel, "${car.engineSize} cc", CheckEngineIcon) else null,
+                    if (car.power > 0) SpecItem(powerLabel, CarFormatters.formatPower(context, car), Icons.Default.Speed) else null
+                )
+
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
@@ -98,6 +119,7 @@ fun CarDetailsScreen(
                         .padding(horizontal = 16.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
+                    // Header Card (Title Only, no summary line)
                     item {
                         Card(
                             modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
@@ -149,38 +171,30 @@ fun CarDetailsScreen(
                                     fontWeight = FontWeight.Bold,
                                     textAlign = TextAlign.Center
                                 )
-                                
-                                val summary = CarFormatters.getCarSummary(context, car)
-                                if (summary.isNotBlank()) {
-                                    Spacer(Modifier.height(4.dp))
-                                    Text(
-                                        text = summary,
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                                    )
-                                }
+                            }
+                        }
+                    }
 
-                                if (car.vin.isNotBlank()) {
-                                    Spacer(Modifier.height(12.dp))
-                                    VinBadge(vin = car.vin)
-                                }
+                    // 1. Vehicle Identity Category
+                    if (identityItems.isNotEmpty()) {
+                        item {
+                            TechnicalCategory(
+                                title = stringResource(R.string.car_identity_section),
+                                icon = Icons.Default.DirectionsCar
+                            ) {
+                                SpecificationCard(specItems = identityItems)
+                            }
+                        }
+                    }
 
-                                if (car.maintenanceGoal.isNotBlank()) {
-                                    Spacer(Modifier.height(12.dp))
-                                    Surface(
-                                        color = MaterialTheme.colorScheme.secondaryContainer,
-                                        shape = RoundedCornerShape(10.dp)
-                                    ) {
-                                        Row(
-                                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Icon(Icons.Outlined.Lightbulb, null, modifier = Modifier.size(16.dp))
-                                            Spacer(Modifier.width(8.dp))
-                                            Text(car.maintenanceGoal, style = MaterialTheme.typography.labelMedium)
-                                        }
-                                    }
-                                }
+                    // 2. Engine & Performance Category
+                    if (engineItems.isNotEmpty()) {
+                        item {
+                            TechnicalCategory(
+                                title = stringResource(R.string.car_engine_transmission_section),
+                                icon = CheckEngineIcon
+                            ) {
+                                SpecificationCard(specItems = engineItems)
                             }
                         }
                     }
@@ -189,5 +203,41 @@ fun CarDetailsScreen(
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun TechnicalCategory(
+    title: String,
+    icon: ImageVector,
+    content: @Composable () -> Unit
+) {
+    Column(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            modifier = Modifier.padding(bottom = 10.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(28.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.primaryContainer),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    modifier = Modifier.size(16.dp),
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
+                )
+            }
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+                color = MaterialTheme.colorScheme.primary
+            )
+        }
+        content()
     }
 }
